@@ -26,28 +26,23 @@ public class Leo {
 
             String input = scanner.nextLine();
 
-            System.out.println("You: " + input);
-            if (input.equalsIgnoreCase("bye")) isExiting = true;
-            if (input.equalsIgnoreCase("add")) {
-                System.out.println("Adding to list now");
+            String command = input.trim().toLowerCase();
 
-                boolean stopListing = false;
-                while (!stopListing) {
-                    String listing = scanner.nextLine();
+            switch (command) {
+                case "bye":
+                    isExiting = true;
+                    break;
 
+                case "add":
+                    handleAdd(scanner, list);
+                    break;
 
+                case "list":
+                    printList(list);
+                    break;
 
-                    if (listing.equalsIgnoreCase("list")) {
-                        for (int i = 0; i < list.size(); i++ ) {
-                            System.out.println(i + 1 + ". " + list.get(i));
-                        }
-                    } else if (listing.equalsIgnoreCase("stop")) stopListing = true;
-                    else {
-                        list.add(listing);
-                        System.out.println("Adding: " + listing);
-                    }
-
-                }
+                default:
+                    System.out.println("You: " + input);
             }
         }
 
@@ -55,8 +50,39 @@ public class Leo {
         System.out.println("Bye. Hope to see you again soon!");
     }
 
-    public static void PrintSep() {
+    private static void PrintSep() {
         String sep = "─────────────────✦─────────────────";
         System.out.println(sep);
     }
+
+    private static void handleAdd(Scanner scanner, ArrayList<String> list) {
+        System.out.println("Adding to list now (type 'stop' to finish, 'list' to view)");
+
+        boolean stopListing = false;
+
+        while (!stopListing) {
+            String listing = scanner.nextLine();
+
+            if (listing.equalsIgnoreCase("list")) {
+                printList(list);
+            } else if (listing.equalsIgnoreCase("stop")) {
+                stopListing = true;
+            } else {
+                list.add(listing);
+                System.out.println("Added: " + listing);
+            }
+        }
+    }
+
+    private static void printList(ArrayList<String> list) {
+        if (list.isEmpty()) {
+            System.out.println("(list is empty)");
+            return;
+        }
+
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println((i + 1) + ". " + list.get(i));
+        }
+    }
+
 }
