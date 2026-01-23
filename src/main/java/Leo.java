@@ -5,7 +5,7 @@ public class Leo {
     public static void main(String[] args) {
         boolean isExiting = false;
 
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<Task> list = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         String logo = """
             ██╗     ███████╗ ██████╗
@@ -46,8 +46,8 @@ public class Leo {
             }
         }
 
-        PrintSep();
-        System.out.println("Bye. Hope to see you again soon!");
+
+        LeoReply("Bye. Hope to see you again soon!");
     }
 
     private static void PrintSep() {
@@ -55,8 +55,8 @@ public class Leo {
         System.out.println(sep);
     }
 
-    private static void handleAdd(Scanner scanner, ArrayList<String> list) {
-        System.out.println("Adding to list now (type 'stop' to finish, 'list' to view)");
+    private static void handleAdd(Scanner scanner, ArrayList<Task> list) {
+        LeoReply("Adding to list now (type 'stop' to finish, 'list' to view)");
 
         boolean stopListing = false;
 
@@ -67,22 +67,80 @@ public class Leo {
                 printList(list);
             } else if (listing.equalsIgnoreCase("stop")) {
                 stopListing = true;
+            } else if (listing.startsWith("mark ")) {
+                int index = Integer.parseInt(listing.substring(5)) - 1;
+                markTask(index, list);
+            } else if (listing.startsWith("unmark ")) {
+                int index = Integer.parseInt(listing.substring(7)) - 1;
+                unmarkTask(index, list);
             } else {
-                list.add(listing);
-                System.out.println("Added: " + listing);
+                list.add(new Task(listing, false));
+                LeoReply("Added: " + listing);
             }
         }
     }
 
-    private static void printList(ArrayList<String> list) {
+    private static void printList(ArrayList<Task> list) {
         if (list.isEmpty()) {
-            System.out.println("(list is empty)");
+            LeoReply("(list is empty)");
+            return;
+        }
+        StringBuilder listText = new StringBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            listText.append((i + 1))
+                    .append(". ")
+                    .append(list.get(i))
+                    .append("\n");
+
+        }
+        LeoReply(listText.toString());
+    }
+
+    public static void LeoReply(String text) {
+        PrintSep();
+
+        System.out.println("Leo: \n" + text);
+        PrintSep();
+    }
+
+
+    public static class Task {
+        private boolean hasMarked;
+        private final String task;
+
+        public Task (String task, boolean hasMarked) {
+            this.task = task;
+            this.hasMarked = hasMarked;
+        }
+
+        @Override
+        public String toString() {
+            String mark = hasMarked? "X" : " ";
+            return "[" + mark + "] " + task;
+        }
+    }
+
+    private static void markTask(int index, ArrayList<Task> list) {
+        if (index > list.size() - 1 || index < 0) {
+            LeoReply("Error, Index outside of list bounds :(");
             return;
         }
 
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println((i + 1) + ". " + list.get(i));
-        }
+        Task t = list.get(index);
+        t.hasMarked = true;
+        LeoReply(t.toString());
     }
+
+    private static void unmarkTask(int index, ArrayList<Task> list) {
+        if (index > list.size() - 1 || index < 0) {
+            LeoReply("Error, Index outside of list bounds :(");
+            return;
+        }
+
+        Task t = list.get(index);
+        t.hasMarked = false;
+        LeoReply(t.toString());
+    }
+
 
 }
