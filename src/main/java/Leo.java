@@ -62,8 +62,31 @@ public class Leo {
 
         while (!stopListing) {
             String listing = scanner.nextLine();
+            String[] parts = listing.trim().split("\\s+", 2);
+            String command = parts[0];
 
-            if (listing.equalsIgnoreCase("list")) {
+            switch (command) {
+                case "list":
+                    printList((list));
+                    break;
+                case "stop":
+                    stopListing = true;
+                    break;
+                case "mark":
+                    int index = Integer.parseInt(parts[1]) - 1;
+                    markTask(index, list);
+                    break;
+                case "unmark":
+                    int index1 = Integer.parseInt(parts[1]) - 1;
+                    unmarkTask(index1, list);
+                    break;
+                default:
+                    list.add(new Task(listing, false));
+                    LeoReply("Added: " + listing);
+
+            }
+
+            /*if (listing.equalsIgnoreCase("list")) {
                 printList(list);
             } else if (listing.equalsIgnoreCase("stop")) {
                 stopListing = true;
@@ -76,7 +99,7 @@ public class Leo {
             } else {
                 list.add(new Task(listing, false));
                 LeoReply("Added: " + listing);
-            }
+            } */
         }
     }
 
