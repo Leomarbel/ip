@@ -74,6 +74,7 @@ public class Leo {
                     case "todo":
                     case "deadline":
                     case "event":
+                    case "delete":
                         if (parts.length < 2) {
                             throw new LeoException("Error!!! Missing description or index.");
                         }
@@ -140,6 +141,16 @@ public class Leo {
                                 eventDuration[1]);
                         break;
 
+                    case "delete":
+                        try {
+                            int index = Integer.parseInt(parts[1]) - 1;
+                            DeleteTask(index, list);
+                        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                            throw new LeoException("Error!!! Please provide a valid task number.");
+                        }
+                        break;
+
+
                     default:
                         list.add(new Task(listing, false));
                         LeoReply("Added: " + listing);
@@ -151,6 +162,8 @@ public class Leo {
 
         }
     }
+
+    // region Functions
 
     private static void PrintList(ArrayList<Task> list) {
         if (list.isEmpty()) {
@@ -173,6 +186,10 @@ public class Leo {
         System.out.println("Leo:\n" + text);
         PrintSep();
     }
+
+
+
+    // endregion
 
     // region Classes
     public static class Task {
@@ -252,7 +269,18 @@ public class Leo {
     // endregion
 
     // region Class Callers
-    private static void MarkTask (int index, ArrayList<Task> list) throws LeoException {
+
+    public static void DeleteTask(int index, ArrayList<Task> list) throws LeoException {
+        if (index > list.size() - 1 || index < 0) {
+            throw new LeoException("Error!!! Index outside of list bounds :(");
+        }
+        Task t = list.get(index);
+        list.remove(index);
+        LeoReply("Task Removed: " + t.toString() + "\n Tasks Left: " + list.size() );
+
+
+    }
+    private static void MarkTask(int index, ArrayList<Task> list) throws LeoException {
         if (index > list.size() - 1 || index < 0) {
             throw new LeoException("Error!!! Index outside of list bounds :(");
         }
