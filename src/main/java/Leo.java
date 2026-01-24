@@ -36,6 +36,7 @@ public class Leo {
 
                 case "add":
                     HandleAdd(scanner, list);
+
                     break;
 
                 case "list":
@@ -62,69 +63,90 @@ public class Leo {
         boolean stopListing = false;
 
         while (!stopListing) {
-            String listing = scanner.nextLine();
-            String[] parts = listing.trim().split("\\s+", 2);
-            String command = parts[0];
+            try {
+                String listing = scanner.nextLine();
+                String[] parts = listing.trim().split("\\s+", 2);
+                String command = parts[0];
 
-            switch (command) {
-                case "list":
-                    PrintList((list));
-                    break;
+                switch (command) {
+                    case "mark":
+                    case "unmark":
+                    case "todo":
+                    case "deadline":
+                    case "event":
+                        if (parts.length < 2) {
+                            throw new LeoException("Error!!! Missing description or index.");
+                        }
+                }
 
-                case "stop":
-                    stopListing = true;
-                    break;
+                switch (command) {
+                    case "list":
+                        PrintList((list));
+                        break;
 
-                case "mark":
-                    int index = Integer.parseInt(parts[1]) - 1;
-                    MarkTask(index, list);
-                    break;
+                    case "stop":
+                        stopListing = true;
+                        break;
 
-                case "unmark":
-                    int index1 = Integer.parseInt(parts[1]) - 1;
-                    UnmarkTask(index1, list);
-                    break;
+                    case "mark":
+                        try {
+                            int index = Integer.parseInt(parts[1]) - 1;
+                            MarkTask(index, list);
+                        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                            throw new LeoException("Error!!! Please provide a valid task number.");
+                        }
+                        break;
 
-                case "todo":
-                    TodoTask(parts[1], list);
-                    break;
+                    case "unmark":
+                        try {
+                            int index = Integer.parseInt(parts[1]) - 1;
+                            UnmarkTask(index, list);
+                        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                            throw new LeoException("Error!!! Please provide a valid task number.");
+                        }
+                        break;
 
-                case "deadline":
-                    String[] deadlineParts = parts[1].split("/by", 2);
+                    case "todo":
+                        TodoTask(parts[1], list);
+                        break;
 
-                    if (deadlineParts.length < 2) {
-                        LeoReply("Error!!! The description of a deadline must have /by.");
-                        return;
-                    }
+                    case "deadline":
+                        String[] deadlineParts = parts[1].split("/by", 2);
 
-                    DeadlineTask(deadlineParts[0].trim(),
-                                 list,
-                                 deadlineParts[1].trim());
-                    break;
+                        if (deadlineParts.length < 2) {
+                            throw new LeoException("Error!!! The description of a deadline must have /by.");
+                        }
 
-                case "event":
-                    String[] eventParts = parts[1].split("/from ", 2);
+                        DeadlineTask(deadlineParts[0].trim(),
+                                list,
+                                deadlineParts[1].trim());
+                        break;
 
-                    if (eventParts.length < 2) {
-                        LeoReply("Error!!! The description of an event must have /from.");
-                        return;
-                    }
+                    case "event":
+                        String[] eventParts = parts[1].split("/from ", 2);
 
-                    String[] eventDuration = eventParts[1].split("/to", 2);
-                    if (eventDuration.length < 2) {
-                        LeoReply("Error!!! The description of an event must have /to.");
-                        return;
-                    }
-                    EventTask(parts[0],
-                              list,
-                              eventDuration[0],
-                              eventDuration[1]);
-                    break;
+                        if (eventParts.length < 2) {
+                            throw new LeoException("Error!!! The description of an event must have /from.");
+                        }
 
-                default:
-                    list.add(new Task(listing, false));
-                    LeoReply("Added: " + listing);
+                        String[] eventDuration = eventParts[1].split("/to", 2);
+                        if (eventDuration.length < 2) {
+                            throw new LeoException("Error!!! The description of an event must have /to.");
 
+                        }
+                        EventTask(parts[0],
+                                list,
+                                eventDuration[0],
+                                eventDuration[1]);
+                        break;
+
+                    default:
+                        list.add(new Task(listing, false));
+                        LeoReply("Added: " + listing);
+
+                }
+            } catch (LeoException e) {
+                LeoReply(e.getMessage());
             }
 
         }
@@ -148,14 +170,14 @@ public class Leo {
 
     public static void LeoReply(String text) {
         PrintSep();
-        System.out.println("Leo: \n" + text);
+        System.out.println("Leo:\n" + text);
         PrintSep();
     }
 
     // region Classes
     public static class Task {
-        private boolean hasMarked;
-        private final String task;
+        protected boolean hasMarked;
+        protected final String task;
 
         public Task (String task, boolean hasMarked) {
             this.task = task;
@@ -168,6 +190,14 @@ public class Leo {
 
         public void unmark() {
             this.hasMarked = false;
+        }
+
+        protected boolean isMarked() {
+            return this.hasMarked;
+        }
+
+        protected String getTask() {
+            return this.task;
         }
 
         @Override
@@ -185,8 +215,8 @@ public class Leo {
 
         @Override
         public String toString() {
-            String mark = super.hasMarked? "X" : " ";
-            return "[T]" + "[" + mark + "] " + super.task;
+            String mark = super.isMarked()? "X" : " ";
+            return "[T]" + "[" + mark + "] " + super.getTask();
         }
     }
 
@@ -199,8 +229,8 @@ public class Leo {
 
         @Override
         public String toString() {
-            String mark = super.hasMarked? "X" : " ";
-            return "[D]" + "[" + mark + "] " + super.task + " [Due: " + deadline + "]";
+            String mark = super.isMarked()? "X" : " ";
+            return "[D]" + "[" + mark + "] " + super.getTask() + " [Due: " + deadline + "]";
         }
     }
 
@@ -215,16 +245,16 @@ public class Leo {
 
         @Override
         public String toString() {
-            String mark = super.hasMarked? "X" : " ";
-            return "[E]" + "[" + mark + "] " + super.task + " [" + start + " --- " + end + "]";
+            String mark = super.isMarked()? "X" : " ";
+            return "[E]" + "[" + mark + "] " + super.getTask() + " [" + start + " --- " + end + "]";
         }
     }
     // endregion
 
-    private static void MarkTask(int index, ArrayList<Task> list) {
+    // region Class Callers
+    private static void MarkTask (int index, ArrayList<Task> list) throws LeoException {
         if (index > list.size() - 1 || index < 0) {
-            LeoReply("Error!!! Index outside of list bounds :(");
-            return;
+            throw new LeoException("Error!!! Index outside of list bounds :(");
         }
 
         Task t = list.get(index);
@@ -232,10 +262,10 @@ public class Leo {
         LeoReply(t.toString());
     }
 
-    private static void UnmarkTask(int index, ArrayList<Task> list) {
+    private static void UnmarkTask(int index, ArrayList<Task> list) throws LeoException{
         if (index > list.size() - 1 || index < 0) {
-            LeoReply("Error!!! Index outside of list bounds :(");
-            return;
+            throw new LeoException("Error!!! Index outside of list bounds :(");
+
         }
 
         Task t = list.get(index);
@@ -261,5 +291,11 @@ public class Leo {
         LeoReply(t.toString() + "\n Current Tasks: " + list.size() );
     }
 
+    // endregion
 
+    public static class LeoException extends Exception {
+        public LeoException(String msg) {
+            super(msg);
+        }
+    }
 }
