@@ -9,12 +9,12 @@ public class Leo {
         ArrayList<Task> list = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         String logo = """
-            ██╗     ███████╗ ██████╗
-            ██║     ██╔════╝██╔═══██╗
-            ██║     █████╗  ██║   ██║
-            ██║     ██╔══╝  ██║   ██║
-            ███████╗███████╗╚██████╔╝
-            ╚══════╝╚══════╝ ╚═════╝
+             _      ______  ____ 
+            | |    |  ____|/ __ \\
+            | |    | |__  | |  | |
+            | |    |  __| | |  | |
+            | |____| |____| |__| |
+            |______|______|\\____/
             """;
 
 
@@ -52,7 +52,7 @@ public class Leo {
     }
 
     private static void PrintSep() {
-        String sep = "─────────────────✦─────────────────";
+        String sep = "____________________________________________________________";
         System.out.println(sep);
     }
 
@@ -103,7 +103,7 @@ public class Leo {
                     break;
 
                 case "event":
-                    String[] eventParts = parts[1].split("/from", 2);
+                    String[] eventParts = parts[1].split("/from ", 2);
 
                     if (eventParts.length < 2) {
                         LeoReply("Error!!! The description of an event must have /from.");
