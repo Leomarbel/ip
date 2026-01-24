@@ -15,5 +15,8 @@ mark 4
 mark -1
 mark 10
 list
+delete 5
+delete 1
+list
 stop
 bye
