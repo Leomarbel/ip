@@ -1,26 +1,30 @@
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Leo {
+    enum Command {
+        BYE, ADD, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, STOP, DELETE, UNKNOWN
+    }
+
     public static void main(String[] args) {
         boolean isExiting = false;
 
         ArrayList<Task> list = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         String logo = """
-             _      ______  ____ 
-            | |    |  ____|/ __ \\
-            | |    | |__  | |  | |
-            | |    |  __| | |  | |
-            | |____| |____| |__| |
-            |______|______|\\____/
-            """;
+             __        _______   _________
+            |  |      |   ____| |   ___   |
+            |  |      |  |__    |  |   |  |
+            |  |      |   __|   |  |   |  |
+            |  |____  |  |____  |  |___|  |
+            |_______| |_______| |_________|
+           """;
 
 
         PrintSep();
-        System.out.println("Hello! I'm \n" + logo);
-        System.out.println("What can I do for you? \n");
+        System.out.println("Hello! I'm\n" + logo);
+        System.out.println("What can I do for you?\n");
         PrintSep();
 
         while (!isExiting) {
@@ -51,6 +55,7 @@ public class Leo {
 
         LeoReply("Bye. Hope to see you again soon!");
     }
+    
 
     private static void PrintSep() {
         String sep = "____________________________________________________________";
@@ -58,6 +63,8 @@ public class Leo {
     }
 
     private static void HandleAdd(Scanner scanner, ArrayList<Task> list) {
+
+
         LeoReply("Adding to list now (type 'stop' to finish, 'list' to view)");
 
         boolean stopListing = false;
@@ -66,30 +73,28 @@ public class Leo {
             try {
                 String listing = scanner.nextLine();
                 String[] parts = listing.trim().split("\\s+", 2);
-                String command = parts[0];
+                Command command = ParseCommand(parts[0]);
 
                 switch (command) {
-                    case "mark":
-                    case "unmark":
-                    case "todo":
-                    case "deadline":
-                    case "event":
-                    case "delete":
+                    case LIST, STOP:
+                        break;
+                    default:
                         if (parts.length < 2) {
                             throw new LeoException("Error!!! Missing description or index.");
                         }
                 }
 
+
                 switch (command) {
-                    case "list":
+                    case LIST:
                         PrintList((list));
                         break;
 
-                    case "stop":
+                    case STOP:
                         stopListing = true;
                         break;
 
-                    case "mark":
+                    case MARK:
                         try {
                             int index = Integer.parseInt(parts[1]) - 1;
                             MarkTask(index, list);
@@ -98,7 +103,7 @@ public class Leo {
                         }
                         break;
 
-                    case "unmark":
+                    case UNMARK:
                         try {
                             int index = Integer.parseInt(parts[1]) - 1;
                             UnmarkTask(index, list);
@@ -107,11 +112,11 @@ public class Leo {
                         }
                         break;
 
-                    case "todo":
+                    case TODO:
                         TodoTask(parts[1], list);
                         break;
 
-                    case "deadline":
+                    case DEADLINE:
                         String[] deadlineParts = parts[1].split("/by", 2);
 
                         if (deadlineParts.length < 2) {
@@ -123,25 +128,15 @@ public class Leo {
                                 deadlineParts[1].trim());
                         break;
 
-                    case "event":
-                        String[] eventParts = parts[1].split("/from ", 2);
-
-                        if (eventParts.length < 2) {
-                            throw new LeoException("Error!!! The description of an event must have /from.");
-                        }
-
-                        String[] eventDuration = eventParts[1].split("/to", 2);
-                        if (eventDuration.length < 2) {
-                            throw new LeoException("Error!!! The description of an event must have /to.");
-
-                        }
+                    case EVENT:
+                        String[] eventDuration = getStrings(parts);
                         EventTask(parts[0],
                                 list,
                                 eventDuration[0],
                                 eventDuration[1]);
                         break;
 
-                    case "delete":
+                    case DELETE:
                         try {
                             int index = Integer.parseInt(parts[1]) - 1;
                             DeleteTask(index, list);
@@ -149,6 +144,7 @@ public class Leo {
                             throw new LeoException("Error!!! Please provide a valid task number.");
                         }
                         break;
+                    case UNKNOWN:
 
 
                     default:
@@ -164,6 +160,22 @@ public class Leo {
     }
 
     // region Functions
+
+    private static String[] getStrings(String[] parts) throws LeoException {
+        String[] eventParts = parts[1].split("/from ", 2);
+
+        if (eventParts.length < 2) {
+            throw new LeoException("Error!!! The description of an event must have /from.");
+        }
+
+        String[] eventDuration = eventParts[1].split("/to", 2);
+        if (eventDuration.length < 2) {
+            throw new LeoException("Error!!! The description of an event must have /to.");
+
+        }
+        return eventDuration;
+    }
+
 
     private static void PrintList(ArrayList<Task> list) {
         if (list.isEmpty()) {
@@ -181,6 +193,15 @@ public class Leo {
         LeoReply(listText.toString());
     }
 
+    private static Command ParseCommand(String input) {
+        try {
+            return Command.valueOf(input.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return Command.UNKNOWN;
+        }
+    }
+
+
     public static void LeoReply(String text) {
         PrintSep();
         System.out.println("Leo:\n" + text);
@@ -195,7 +216,7 @@ public class Leo {
     public static class Task {
         protected boolean hasMarked;
         protected final String task;
-
+        
         public Task (String task, boolean hasMarked) {
             this.task = task;
             this.hasMarked = hasMarked;
@@ -304,19 +325,19 @@ public class Leo {
     private static void TodoTask(String task, ArrayList<Task> list) {
         Todo t = new Todo(task, false);
         list.add(t);
-        LeoReply(t.toString() + "\n Current Tasks: " + list.size() );
+        LeoReply(t + "\n Current Tasks: " + list.size() );
     }
 
     private static void DeadlineTask(String task, ArrayList<Task> list, String deadline) {
         Deadline t = new Deadline(task, false, deadline);
         list.add(t);
-        LeoReply(t.toString() + "\n Current Tasks: " + list.size() );
+        LeoReply(t + "\n Current Tasks: " + list.size() );
     }
 
     private static void EventTask(String task, ArrayList<Task> list, String start, String end) {
             Event t = new Event(task, false, start, end);
         list.add(t);
-        LeoReply(t.toString() + "\n Current Tasks: " + list.size() );
+        LeoReply(t + "\n Current Tasks: " + list.size() );
     }
 
     // endregion
