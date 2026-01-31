@@ -1,4 +1,5 @@
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,7 +11,6 @@ public class Leo {
     public static void main(String[] args) {
         boolean isExiting = false;
 
-        ArrayList<Task> list = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         String logo = """
              __        _______   _________
@@ -27,6 +27,8 @@ public class Leo {
         System.out.println("What can I do for you?\n");
         PrintSep();
 
+        ArrayList<Task> lists = loadTasks();
+
         while (!isExiting) {
 
             String input = scanner.nextLine();
@@ -39,12 +41,12 @@ public class Leo {
                     break;
 
                 case "add":
-                    HandleAdd(scanner, list);
+                    HandleAdd(scanner, lists);
 
                     break;
 
                 case "list":
-                    PrintList(list);
+                    PrintList(lists);
                     break;
 
                 default:
@@ -122,6 +124,9 @@ public class Leo {
                         if (deadlineParts.length < 2) {
                             throw new LeoException("Error!!! The description of a deadline must have /by.");
                         }
+                        if (deadlineParts[1].isEmpty()) {
+                            throw new LeoException("Error!!! Deadline must have an input!");
+                        }
 
                         DeadlineTask(deadlineParts[0].trim(),
                                 list,
@@ -148,8 +153,6 @@ public class Leo {
 
 
                     default:
-                        list.add(new Task(listing, false));
-                        LeoReply("Added: " + listing);
 
                 }
             } catch (LeoException e) {
@@ -158,7 +161,7 @@ public class Leo {
 
         }
     }
-
+    
     // region Functions
 
     private static String[] getStrings(String[] parts) throws LeoException {
@@ -213,7 +216,7 @@ public class Leo {
     // endregion
 
     // region Classes
-    public static class Task {
+    public abstract static class Task {
         protected boolean hasMarked;
         protected final String task;
         
@@ -237,11 +240,12 @@ public class Leo {
         protected String getTask() {
             return this.task;
         }
+        public abstract String toSaveState();
 
         @Override
         public String toString() {
-            String mark = hasMarked? "X" : " ";
-            return "[" + mark + "] " + task;
+            String mark = hasMarked ? "1" : "0";
+            return "T | " + mark + " | " + getTask();
         }
     }
 
@@ -252,9 +256,16 @@ public class Leo {
         }
 
         @Override
+        public String toSaveState() {
+            String mark = isMarked()? "X" : "O";
+            return "T | " + mark + " | " + getTask();
+
+        }
+
+        @Override
         public String toString() {
-            String mark = super.isMarked()? "X" : " ";
-            return "[T]" + "[" + mark + "] " + super.getTask();
+            String mark = isMarked()? "X" : " ";
+            return "[T]" + "[" + mark + "] " + getTask();
         }
     }
 
@@ -266,9 +277,16 @@ public class Leo {
         }
 
         @Override
+        public String toSaveState() {
+            String mark = isMarked() ? "X" : "O";
+            return "D | " + mark + " | "
+                    + getTask() + " | " + deadline;
+        }
+
+        @Override
         public String toString() {
-            String mark = super.isMarked()? "X" : " ";
-            return "[D]" + "[" + mark + "] " + super.getTask() + " [Due: " + deadline + "]";
+            String mark = isMarked()? "X" : " ";
+            return "[D]" + "[" + mark + "] " + getTask() + " [Due: " + deadline + "]";
         }
     }
 
@@ -279,6 +297,13 @@ public class Leo {
             super(task, hasMarked);
             this.start = start;
             this.end = end;
+        }
+
+        @Override
+        public String toSaveState() {
+            String mark = isMarked() ? "X" : "O";
+            return "E | " + mark + " | "
+                    + getTask() + " | " + start + " | " + end;
         }
 
         @Override
@@ -297,6 +322,7 @@ public class Leo {
         }
         Task t = list.get(index);
         list.remove(index);
+        saveTasks(list);
         LeoReply("Task Removed: " + t.toString() + "\n Tasks Left: " + list.size() );
 
 
@@ -308,14 +334,15 @@ public class Leo {
 
         Task t = list.get(index);
         t.mark();
+        saveTasks(list);
         LeoReply(t.toString());
     }
 
     private static void UnmarkTask(int index, ArrayList<Task> list) throws LeoException{
         if (index > list.size() - 1 || index < 0) {
             throw new LeoException("Error!!! Index outside of list bounds :(");
-
         }
+        saveTasks(list);
 
         Task t = list.get(index);
         t.unmark();
@@ -325,18 +352,21 @@ public class Leo {
     private static void TodoTask(String task, ArrayList<Task> list) {
         Todo t = new Todo(task, false);
         list.add(t);
+        saveTasks(list);
         LeoReply(t + "\n Current Tasks: " + list.size() );
     }
 
     private static void DeadlineTask(String task, ArrayList<Task> list, String deadline) {
         Deadline t = new Deadline(task, false, deadline);
         list.add(t);
+        saveTasks(list);
         LeoReply(t + "\n Current Tasks: " + list.size() );
     }
 
     private static void EventTask(String task, ArrayList<Task> list, String start, String end) {
             Event t = new Event(task, false, start, end);
         list.add(t);
+        saveTasks(list);
         LeoReply(t + "\n Current Tasks: " + list.size() );
     }
 
@@ -346,5 +376,30 @@ public class Leo {
         public LeoException(String msg) {
             super(msg);
         }
+    }
+    private static void saveTasks(ArrayList<Task> list) {
+
+        ArrayList<String> data = new ArrayList<>();
+
+        for (Task t : list) {
+            data.add(t.toSaveState());
+        }
+
+        try {
+            Storage.save(data);
+        } catch (IOException e) {
+            LeoReply("Save Error: " + e.getMessage());
+
+        }
+    }
+
+    private static ArrayList<Task> loadTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        try {
+            tasks = Storage.load();
+        } catch (IOException e) {
+            LeoReply(( "Load Error: " + e.getMessage()));
+        }
+        return tasks;
     }
 }
