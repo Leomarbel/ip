@@ -52,10 +52,6 @@ public class TaskList {
         return tasks.size();
     }
 
-
-
-
-
     public ArrayList<String> toSaveFormat() {
         ArrayList<String> data = new ArrayList<>();
         for (leo.task.Task t : tasks) {
