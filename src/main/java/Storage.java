@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.File;
@@ -42,7 +43,7 @@ public class Storage {
 
         return switch (type) {
             case "T" -> new Leo.Todo(task, marked);
-            case "D" -> new Leo.Deadline(task, marked, parts[3]);
+            case "D" -> new Leo.Deadline(task, marked, LocalDateTime.parse(parts[3]));
             case "E" -> new Leo.Event(task, marked, parts[3], parts[4]);
             default -> throw new IllegalArgumentException("Unknown Task Type");
         };
