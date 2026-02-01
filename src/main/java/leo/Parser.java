@@ -1,15 +1,27 @@
 package leo;
 
-import leo.command.*;
+import leo.command.Command;
+import leo.command.DeadlineCommand;
+import leo.command.DeleteCommand;
+import leo.command.EventCommand;
+import leo.command.ExitCommand;
+import leo.command.ListCommand;
+import leo.command.MarkCommand;
+import leo.command.TodoCommand;
+import leo.command.UnmarkCommand;
 
 public class Parser {
-    enum Command_Enum {
+    enum CommandType {
         BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN
     }
-    public static Command parse(String commands) throws LeoException {
 
-        String[] parts = commands.trim().split("\\s+", 2);
-        Command_Enum command = ParseCommand(parts[0]);
+    public static Command parse(String line) throws LeoException {
+        if (line == null || line.trim().isEmpty()) {
+            throw new LeoException("Command cannot be empty.");
+        }
+
+        String[] parts = line.trim().split("\\s+", 2);
+        CommandType command = parseCommand(parts[0]);
 
         switch (command) {
             case LIST, BYE:
@@ -47,10 +59,8 @@ public class Parser {
         case TODO:
             return new TodoCommand(parts[1]);
 
-
         case DEADLINE:
             return new DeadlineCommand(parts[1]);
-
 
         case EVENT:
             return new EventCommand(parts[1]);
@@ -66,15 +76,15 @@ public class Parser {
         case UNKNOWN:
 
         default:
-            throw new LeoException("Unknown command: " + command);
+            throw new LeoException("Unknown command: " + parts[0]);
         }
     }
 
-    private static Command_Enum ParseCommand(String input) {
+    private static CommandType parseCommand(String input) {
         try {
-            return Command_Enum.valueOf(input.trim().toUpperCase());
+            return CommandType.valueOf(input.trim().toUpperCase());
         } catch (IllegalArgumentException e) {
-            return Command_Enum.UNKNOWN;
+            return CommandType.UNKNOWN;
         }
     }
 

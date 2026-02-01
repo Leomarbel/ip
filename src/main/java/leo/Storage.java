@@ -15,27 +15,23 @@ import java.util.Scanner;
 
 public class Storage {
     private String filePath;
-    static ArrayList<Task> data = new ArrayList<>();
+    private ArrayList<Task> data = new ArrayList<>();
+
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
     public ArrayList<Task> load() throws IOException {
         File file = new File(filePath);
-
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             file.createNewFile();
-            //leo.Leo.LeoReply("No File Detected, created new file");
             return data;
         }
-
         Scanner s = new Scanner(file);
-
         while (s.hasNext()) {
             data.add(fromSaveState(s.nextLine()));
         }
-
         s.close();
         return data;
     }
@@ -63,20 +59,16 @@ public class Storage {
             f.createNewFile();
         }
 
-
         FileWriter fw = new FileWriter(f);
         for (String line : data) {
             fw.write(line);
             fw.write(System.lineSeparator());
         }
         fw.close();
-
-
     }
 
     public ArrayList<Task> loadTasks() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks = load();
+        ArrayList<Task> tasks = load();
         return tasks;
     }
 }

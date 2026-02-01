@@ -1,11 +1,6 @@
 package leo;
 
 import leo.task.Task;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class TaskList {
@@ -34,18 +29,13 @@ public class TaskList {
             throw new LeoException("Error!!! Index outside of list bounds :(");
         }
         tasks.get(index).mark();
-        //saveTasks(list);
-        //LeoReply(t.toString());
     }
 
     public void unmarkTask(int index) throws LeoException {
         if (index > tasks.size() - 1 || index < 0) {
             throw new LeoException("Error!!! Index outside of list bounds :(");
         }
-        //saveTasks(list);
-
         tasks.get(index).unmark();
-        //LeoReply(t.toString());
     }
 
     public int size() {

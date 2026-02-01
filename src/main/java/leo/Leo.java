@@ -3,17 +3,15 @@ package leo;
 import leo.command.Command;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
+
 
 public class Leo {
     private Storage storage;
     private TaskList tasks;
     private Ui ui;
-    private String filepath;
+
 
     public Leo(String filepath) {
-        this.filepath = filepath;
         ui = new Ui();
         storage = new Storage(filepath);
         try {
@@ -26,18 +24,10 @@ public class Leo {
 
     public void run() {
         boolean isExit = false;
-
         ui.showWelcome();
-
-        Scanner scanner = new Scanner(System.in);
-
-        //ArrayList<leo.task.Task> lists = loadTasks();
-        //ArrayList<leo.task.Task> lists = new ArrayList<>();
-
         while (!isExit) {
             try {
                 String fullCommand = ui.readCommand();
-
                 Command command = Parser.parse(fullCommand);
                 command.execute(tasks, ui, storage);
                 isExit = command.isExit();

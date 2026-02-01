@@ -4,13 +4,7 @@ import java.util.Scanner;
 
 public class Ui {
     private final Scanner sc;
-
-    public Ui() {
-        sc = new Scanner(System.in);
-    }
-
-    public void showWelcome() {
-        String logo = """
+    static final String LOGO = """
              __        _______   _________
             |  |      |   ____| |   ___   |
             |  |      |  |__    |  |   |  |
@@ -19,14 +13,21 @@ public class Ui {
             |_______| |_______| |_________|
            """;
 
+    public Ui() {
+        sc = new Scanner(System.in);
+    }
+
+    public void showWelcome() {
+
+
 
         printSep();
-        System.out.println("Hello! I'm\n" + logo);
+        System.out.println("Hello! I'm\n" + LOGO);
         System.out.println("What can I do for you?\n");
         printSep();
     }
 
-    public void printSep() {
+    private void printSep() {
         String sep = "____________________________________________________________";
         System.out.println(sep);
     }
