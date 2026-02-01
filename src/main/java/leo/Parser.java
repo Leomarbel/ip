@@ -30,6 +30,7 @@ public class Parser {
         case MARK:
             try {
                 int index = Integer.parseInt(parts[1]) - 1;
+
                 return new MarkCommand(index);
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 throw new LeoException("Please provide a valid task number.");

@@ -4,13 +4,15 @@ import leo.LeoException;
 import leo.Storage;
 import leo.TaskList;
 import leo.Ui;
+import leo.task.Task;
 
 import java.io.IOException;
 
-public class DeleteCommand extends Command{
-    private final int index;
+public class DeleteCommand extends Command {
+    private int index;
 
     public DeleteCommand(int index) {
+
         this.index = index;
     }
 
@@ -19,7 +21,7 @@ public class DeleteCommand extends Command{
         if (index > tasks.size() - 1 || index < 0) {
             throw new LeoException("Index outside of list bounds :(");
         }
-
+        Task t = tasks.get(index);
         tasks.deleteTask(index);
 
         try {
@@ -27,7 +29,7 @@ public class DeleteCommand extends Command{
         } catch (IOException e) {
             ui.showError("Unable to save tasks: " + e.getMessage());
         }
-        ui.showLeoReply("Deleted: " + tasks.get(index)
+        ui.showLeoReply("Deleted: " + t
                 + "\n Tasks Left: " + tasks.size() );
     }
 }
