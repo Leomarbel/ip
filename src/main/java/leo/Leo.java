@@ -1,17 +1,28 @@
 package leo;
 
 import leo.command.Command;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The main class for the Leo task management application.
+ * Leo is a chatbot that helps users manage their tasks, including todos,
+ * deadlines, and events. It provides functionality to add, delete, mark,
+ * unmark, and list tasks, with persistent storage to a file.
+ */
 public class Leo {
     private Storage storage;
     private TaskList tasks;
     private Ui ui;
     private String filepath;
 
+    /**
+     * Constructs a new Leo instance with the specified file path for data storage.
+     * Initializes the user interface, storage system, and loads existing tasks
+     * from the storage file. If loading fails, starts with an empty task list.
+     *
+     * @param filepath The path to the file where tasks will be stored and loaded from.
+     */
     public Leo(String filepath) {
         this.filepath = filepath;
         ui = new Ui();
@@ -24,6 +35,12 @@ public class Leo {
         }
     }
 
+    /**
+     * Starts the Leo application and enters the main command loop.
+     * Displays a welcome message, then continuously reads user commands,
+     * parses them, executes the corresponding actions, and displays results
+     * until an exit command is received.
+     */
     public void run() {
         boolean isExit = false;
 
@@ -37,7 +54,6 @@ public class Leo {
         while (!isExit) {
             try {
                 String fullCommand = ui.readCommand();
-
                 Command command = Parser.parse(fullCommand);
                 command.execute(tasks, ui, storage);
                 isExit = command.isExit();
@@ -47,6 +63,13 @@ public class Leo {
         }
     }
 
+    /**
+     * The main entry point for the Leo application.
+     * Creates a new Leo instance with the default storage file path
+     * and starts the application.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         new Leo("./data/leo_mem.txt").run();
     }

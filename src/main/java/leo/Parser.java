@@ -2,10 +2,19 @@ package leo;
 
 import leo.command.*;
 
+/** Parses user input strings into executable Command objects. */
 public class Parser {
     enum Command_Enum {
         BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN
     }
+
+    /**
+     * Parses user command string and returns corresponding Command.
+     * Uses a switch and enum Command_Enum to call the command
+     * @param commands The user input command string.
+     * @return The corresponding Command object.
+     * @throws LeoException if command is invalid or has missing parameters.
+     */
     public static Command parse(String commands) throws LeoException {
 
         String[] parts = commands.trim().split("\\s+", 2);
@@ -70,6 +79,11 @@ public class Parser {
         }
     }
 
+    /**
+     * Converts string input to corresponding Command_Enum value.
+     * @param input The command string to parse.
+     * @return The corresponding Command_Enum value
+     */
     private static Command_Enum ParseCommand(String input) {
         try {
             return Command_Enum.valueOf(input.trim().toUpperCase());

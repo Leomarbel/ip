@@ -12,21 +12,32 @@ import java.io.FileWriter;
 import java.io.File;
 import java.util.Scanner;
 
-
+/** Manages file storage operations for task data persistence */
 public class Storage {
     private String filePath;
     static ArrayList<Task> data = new ArrayList<>();
+
+    /**
+     * Creates a Storage instance with specified file path.
+     *
+     * @param filePath The path to the storage file.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from storage file.
+     *
+     * @return List of loaded tasks.
+     * @throws IOException If file operations fail.
+     */
     public ArrayList<Task> load() throws IOException {
         File file = new File(filePath);
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             file.createNewFile();
-            //leo.Leo.LeoReply("No File Detected, created new file");
             return data;
         }
 
@@ -40,6 +51,12 @@ public class Storage {
         return data;
     }
 
+    /**
+     * Converts a saved string line back to a Task object.
+     *
+     * @param line The saved task string.
+     * @return The reconstructed Task object.
+     */
     public Task fromSaveState(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
@@ -55,7 +72,12 @@ public class Storage {
 
     }
 
-
+    /**
+     * Saves task data to storage file.
+     *
+     * @param data List of task strings to save.
+     * @throws IOException If file operations fail.
+     */
     public void save (ArrayList<String> data) throws IOException{
         File f = new File(filePath);
         if (!f.exists()) {
@@ -74,8 +96,14 @@ public class Storage {
 
     }
 
+    /**
+     * Loads tasks from storage file (alias for load()).
+     *
+     * @return List of loaded tasks.
+     * @throws IOException If file operations fail.
+     */
     public ArrayList<Task> loadTasks() throws IOException {
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks;
         tasks = load();
         return tasks;
     }
