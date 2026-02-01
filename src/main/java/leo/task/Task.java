@@ -2,7 +2,7 @@ package leo.task;
 
 public abstract class Task {
     protected boolean hasMarked;
-    protected final String task;
+    protected String task;
 
     public Task (String task, boolean hasMarked) {
         this.task = task;
@@ -17,11 +17,11 @@ public abstract class Task {
         this.hasMarked = false;
     }
 
-    protected boolean isMarked() {
+    public boolean isMarked() {
         return this.hasMarked;
     }
 
-    protected String getTask() {
+    public String getTask() {
         return this.task;
     }
     public abstract String toSaveState();
