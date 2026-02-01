@@ -1,7 +1,12 @@
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Leo {
     enum Command {
@@ -28,6 +33,7 @@ public class Leo {
         PrintSep();
 
         ArrayList<Task> lists = loadTasks();
+        //ArrayList<Task> lists = new ArrayList<>();
 
         while (!isExiting) {
 
@@ -270,10 +276,10 @@ public class Leo {
     }
 
     public static class Deadline extends Task {
-        private final String deadline;
-        public Deadline(String task, boolean hasMarked, String deadline) {
+        private final LocalDateTime deadline;
+        public Deadline(String task, boolean hasMarked, LocalDateTime deadline) {
             super(task, hasMarked);
-            this.deadline = deadline;
+            this.deadline = deadline.truncatedTo(ChronoUnit.MINUTES);
         }
 
         @Override
@@ -286,7 +292,10 @@ public class Leo {
         @Override
         public String toString() {
             String mark = isMarked()? "X" : " ";
-            return "[D]" + "[" + mark + "] " + getTask() + " [Due: " + deadline + "]";
+            return "[D]" + "[" + mark + "] " + getTask() + " [Due: "
+                    + deadline.getMonth() + " "
+                    + deadline.getDayOfMonth() + " "
+                    + deadline.getYear() + "]";
         }
     }
 
@@ -357,10 +366,38 @@ public class Leo {
     }
 
     private static void DeadlineTask(String task, ArrayList<Task> list, String deadline) {
-        Deadline t = new Deadline(task, false, deadline);
-        list.add(t);
-        saveTasks(list);
-        LeoReply(t + "\n Current Tasks: " + list.size() );
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HHmm"))   // "2/12/2019 1800"
+                .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HHmm"))  // "2/12/2019 18:00"
+
+                .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"))  // "02/12/2019 1800"
+                .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) // "02/12/2019 18:00"
+
+                .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HHmm"))    // "12/2/2019 1800"
+                .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HH:mm"))   // "12/2/2019 18:00"
+
+                .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HHmm"))  // "12/02/2019 1800"
+                .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")) // "12/02/2019 18:00"
+                .toFormatter();
+        try {
+            LocalDateTime parsedDeadline = LocalDateTime.parse(deadline,
+                    formatter);
+            Deadline t = new Deadline(task, false, parsedDeadline);
+            list.add(t);
+            saveTasks(list);
+            LeoReply(t + "\n Current Tasks: " + list.size() );
+        } catch (DateTimeParseException e) {
+            String format = """ 
+                            Acceptable formats:
+                            d/M/yyyy HHmm
+                            dd/MM/yyyy HHmm
+                            M/d/yyyy HHmm
+                            MM/dd/yyyy HHmm
+                            """;
+
+            LeoReply("Error!!! Your Date & Time format is wrong!" + "\n" + format);
+        }
+
     }
 
     private static void EventTask(String task, ArrayList<Task> list, String start, String end) {
