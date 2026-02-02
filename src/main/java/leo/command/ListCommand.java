@@ -26,7 +26,6 @@ public class ListCommand extends Command {
                         .append(". ")
                         .append(tasks.get(i))
                         .append("\n");
-
             }
             ui.showLeoReply(listText.toString());
         }

@@ -18,7 +18,6 @@ public class DeleteCommand extends Command {
      * @param index The task position to delete.
      */
     public DeleteCommand(int index) {
-
         this.index = index;
     }
 

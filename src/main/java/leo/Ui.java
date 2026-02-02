@@ -5,15 +5,7 @@ import java.util.Scanner;
 /** Handles all user interface interactions including input and output. */
 public class Ui {
     private final Scanner sc;
-
-    /** Creates a Ui instance with scanner for user input. */
-    public Ui() {
-        sc = new Scanner(System.in);
-    }
-
-    /** Displays the welcome message and Leo logo. */
-    public void showWelcome() {
-        String logo = """
+    static final String LOGO = """
              __        _______   _________
             |  |      |   ____| |   ___   |
             |  |      |  |__    |  |   |  |
@@ -21,16 +13,20 @@ public class Ui {
             |  |____  |  |____  |  |___|  |
             |_______| |_______| |_________|
            """;
-
-
+    /** Creates a Ui instance with scanner for user input. */
+    public Ui() {
+        sc = new Scanner(System.in);
+    }
+    /** Displays the welcome message and Leo logo. */
+    public void showWelcome() {
         printSep();
-        System.out.println("Hello! I'm\n" + logo);
+        System.out.println("Hello! I'm\n" + LOGO);
         System.out.println("What can I do for you?\n");
         printSep();
     }
 
     /** Prints a separator line for visual clarity. */
-    public void printSep() {
+    private void printSep() {
         String sep = "____________________________________________________________";
         System.out.println(sep);
     }

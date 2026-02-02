@@ -15,7 +15,7 @@ import java.util.Scanner;
 /** Manages file storage operations for task data persistence */
 public class Storage {
     private String filePath;
-    static ArrayList<Task> data = new ArrayList<>();
+    static ArrayList<Task> datas = new ArrayList<>();
 
     /**
      * Creates a Storage instance with specified file path.
@@ -34,21 +34,17 @@ public class Storage {
      */
     public ArrayList<Task> load() throws IOException {
         File file = new File(filePath);
-
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             file.createNewFile();
-            return data;
+            return datas;
         }
-
         Scanner s = new Scanner(file);
-
         while (s.hasNext()) {
-            data.add(fromSaveState(s.nextLine()));
+            datas.add(fromSaveState(s.nextLine()));
         }
-
         s.close();
-        return data;
+        return datas;
     }
 
     /**
@@ -85,15 +81,12 @@ public class Storage {
             f.createNewFile();
         }
 
-
         FileWriter fw = new FileWriter(f);
         for (String line : data) {
             fw.write(line);
             fw.write(System.lineSeparator());
         }
         fw.close();
-
-
     }
 
     /**
@@ -103,8 +96,7 @@ public class Storage {
      * @throws IOException If file operations fail.
      */
     public ArrayList<Task> loadTasks() throws IOException {
-        ArrayList<Task> tasks;
-        tasks = load();
+        ArrayList<Task> tasks = load();
         return tasks;
     }
 }

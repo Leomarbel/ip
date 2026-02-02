@@ -4,6 +4,7 @@ import leo.command.Command;
 import java.io.IOException;
 import java.util.Scanner;
 
+
 /**
  * The main class for the Leo task management application.
  * Leo is a chatbot that helps users manage their tasks, including todos,
@@ -14,7 +15,7 @@ public class Leo {
     private Storage storage;
     private TaskList tasks;
     private Ui ui;
-    private String filepath;
+
 
     /**
      * Constructs a new Leo instance with the specified file path for data storage.
@@ -24,7 +25,6 @@ public class Leo {
      * @param filepath The path to the file where tasks will be stored and loaded from.
      */
     public Leo(String filepath) {
-        this.filepath = filepath;
         ui = new Ui();
         storage = new Storage(filepath);
         try {
@@ -43,14 +43,7 @@ public class Leo {
      */
     public void run() {
         boolean isExit = false;
-
         ui.showWelcome();
-
-        Scanner scanner = new Scanner(System.in);
-
-        //ArrayList<leo.task.Task> lists = loadTasks();
-        //ArrayList<leo.task.Task> lists = new ArrayList<>();
-
         while (!isExit) {
             try {
                 String fullCommand = ui.readCommand();

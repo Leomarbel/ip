@@ -30,7 +30,6 @@ public class UnmarkCommand extends Command{
         if (index > tasks.size() - 1 || index < 0) {
             throw new LeoException("Index outside of list bounds :(");
         }
-
         tasks.unmarkTask(index);
 
         try {
