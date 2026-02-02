@@ -39,6 +39,7 @@ public abstract class Task {
     /** Converts task to string format for saving to file. */
     public abstract String toSaveState();
 
+
     @Override
     public String toString() {
         String mark = hasMarked ? "1" : "0";

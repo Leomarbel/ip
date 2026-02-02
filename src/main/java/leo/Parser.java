@@ -5,15 +5,17 @@ import leo.command.DeadlineCommand;
 import leo.command.DeleteCommand;
 import leo.command.EventCommand;
 import leo.command.ExitCommand;
+import leo.command.FindCommand;
 import leo.command.ListCommand;
 import leo.command.MarkCommand;
 import leo.command.TodoCommand;
 import leo.command.UnmarkCommand;
 
+
 /** Parses user input strings into executable Command objects. */
 public class Parser {
     enum CommandType {
-        BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN
+        BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, FIND, UNKNOWN
     }
 
     /**
@@ -80,6 +82,9 @@ public class Parser {
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 throw new LeoException("Please provide a valid task number.");
             }
+
+        case FIND:
+            return new FindCommand(parts[1]);
 
         case UNKNOWN:
 

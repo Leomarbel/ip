@@ -2,7 +2,6 @@ package leo;
 
 import leo.command.Command;
 import java.io.IOException;
-import java.util.Scanner;
 
 
 /**
