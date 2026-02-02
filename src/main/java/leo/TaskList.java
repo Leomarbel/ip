@@ -8,20 +8,35 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/** Manages a collection of tasks and provides operations on them */
 public class TaskList {
     public ArrayList<Task> tasks;
 
+    /**
+     * Creates TaskList with existing task collection.
+     * @param
+     */
     TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
+
+    /** Creates empty TaskList. */
     TaskList() {
         this.tasks = new ArrayList<>();
     }
 
+    /** Adds a task to the list. */
     public void addTask(Task task) {
         this.tasks.add(task);
     }
 
+    /**
+     * Deletes task at specified index.
+     *
+     * @param index The position of task to delete.
+     * @return The deleted task.
+     * @throws LeoException if index is invalid.
+     */
     public Task deleteTask(int index) throws LeoException {
         if (index > tasks.size() - 1 || index < 0) {
             throw new LeoException("Error!!! Index outside of list bounds :(");
@@ -29,6 +44,12 @@ public class TaskList {
         return tasks.remove(index);
     }
 
+    /**
+     * Marks task at specified index as done.
+     *
+     * @param index The position of task to mark.
+     * @throws LeoException if index is invalid.
+     */
     public void markTask(int index) throws LeoException {
         if (index > tasks.size() - 1 || index < 0) {
             throw new LeoException("Error!!! Index outside of list bounds :(");
@@ -38,6 +59,12 @@ public class TaskList {
         //LeoReply(t.toString());
     }
 
+    /**
+     * Unmarks task at specified index.
+     *
+     * @param index The position of task to unmark.
+     * @throws LeoException if index is invalid.
+     */
     public void unmarkTask(int index) throws LeoException {
         if (index > tasks.size() - 1 || index < 0) {
             throw new LeoException("Error!!! Index outside of list bounds :(");
@@ -52,6 +79,7 @@ public class TaskList {
         return tasks.size();
     }
 
+    /** Converts all tasks to save format strings. */
     public ArrayList<String> toSaveFormat() {
         ArrayList<String> data = new ArrayList<>();
         for (leo.task.Task t : tasks) {
@@ -65,6 +93,12 @@ public class TaskList {
         return tasks.isEmpty();
     }
 
+    /**
+     * Gets task at specified index.
+     *
+     * @param i The position of task to retrieve.
+     * @return The task at position i.
+     */
     public Task get(int i) {
         return tasks.get(i);
     }

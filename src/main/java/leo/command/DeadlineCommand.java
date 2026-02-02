@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 
+/** Command to add a deadline task with specific due date/time. */
 public class DeadlineCommand extends Command {
     private  String taskDesc;
     private  DateTimeFormatter formatter = new DateTimeFormatterBuilder()
@@ -28,12 +29,22 @@ public class DeadlineCommand extends Command {
             .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")) // "12/02/2019 18:00"
             .toFormatter();
 
+    /**
+     * Creates a DeadlineCommand with task description.
+     *
+     * @param taskDesc The task description including "/by" deadline.
+     */
     public DeadlineCommand(String taskDesc) {
         this.taskDesc = taskDesc;
 
 
     }
 
+    /**
+     * @inheritDoc
+     * Check for correct format of deadline (task) /by (time format)
+     * Add the Deadline Task into the Tasklist
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
         String[] deadlineParts = taskDesc.split("/by", 2);
