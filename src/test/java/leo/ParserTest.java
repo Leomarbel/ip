@@ -28,7 +28,6 @@ class ParserTest {
     void parse_markCommand_validIndex() throws LeoException {
         Command command = Parser.parse("mark 5");
         assertInstanceOf(MarkCommand.class, command);
-        MarkCommand markCommand = (MarkCommand) command;
     }
 
     @Test
@@ -36,7 +35,6 @@ class ParserTest {
     void parse_unmarkCommand_validIndex() throws LeoException {
         Command command = Parser.parse("unmark 3");
         assertInstanceOf(UnmarkCommand.class, command);
-        UnmarkCommand unmarkCommand = (UnmarkCommand) command;
     }
 
     @Test
@@ -44,7 +42,6 @@ class ParserTest {
     void parse_deleteCommand_validIndex() throws LeoException {
         Command command = Parser.parse("delete 2");
         assertInstanceOf(DeleteCommand.class, command);
-        DeleteCommand deleteCommand = (DeleteCommand) command;
     }
 
     @Test
@@ -59,7 +56,6 @@ class ParserTest {
     void parse_deadlineCommand_validDescription() throws LeoException {
         Command command = Parser.parse("deadline Submit assignment /by 2024-12-25 2359");
         assertInstanceOf(DeadlineCommand.class, command);
-        DeadlineCommand deadlineCommand = (DeadlineCommand) command;
     }
 
     @Test
@@ -67,7 +63,6 @@ class ParserTest {
     void parse_eventCommand_validDescription() throws LeoException {
         Command command = Parser.parse("event Team meeting /from 2pm /to 4pm");
         assertInstanceOf(EventCommand.class, command);
-        EventCommand eventCommand = (EventCommand) command;
     }
 
     // Test error cases for MARK/UNMARK/DELETE
@@ -147,7 +142,7 @@ class ParserTest {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("randomcommand 1");
         });
-        assertEquals("Unknown command: UNKNOWN", exception.getMessage());
+        assertEquals("Unknown command: randomcommand", exception.getMessage());
     }
 
     @Test
@@ -156,7 +151,7 @@ class ParserTest {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("!@#$% dsa");
         });
-        assertEquals("Unknown command: UNKNOWN", exception.getMessage());
+        assertEquals("Unknown command: !@#$%", exception.getMessage());
     }
 
 
