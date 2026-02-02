@@ -13,7 +13,7 @@ public class Ui {
             |  |____  |  |____  |  |___|  |
             |_______| |_______| |_________|
            """;
-    /** Creates a Ui instance with scanner for user input. */
+    /** Creates an Ui instance with scanner for user input. */
     public Ui() {
         sc = new Scanner(System.in);
     }
