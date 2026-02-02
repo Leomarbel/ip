@@ -4,7 +4,7 @@ import leo.command.*;
 
 public class Parser {
     enum Command_Enum {
-        BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, UNKNOWN
+        BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, FIND, UNKNOWN
     }
     public static Command parse(String commands) throws LeoException {
 
@@ -62,6 +62,9 @@ public class Parser {
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                 throw new LeoException("Please provide a valid task number.");
             }
+
+        case FIND:
+            return new FindCommand(parts[1]);
 
         case UNKNOWN:
 

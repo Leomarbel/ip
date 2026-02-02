@@ -26,6 +26,7 @@ public abstract class Task {
     }
     public abstract String toSaveState();
 
+
     @Override
     public String toString() {
         String mark = hasMarked ? "1" : "0";

@@ -68,4 +68,28 @@ public class TaskList {
     public Task get(int i) {
         return tasks.get(i);
     }
+
+    /**
+     * Searches for tasks that contain the specified keyword in their description
+     * They keyword is case-insensitive, and allows space characters.
+     *
+     * @param taskDesc The keyword to be found (User Input)
+     * @return an ArrayList of Task objects that contain the keyword
+     * @throws LeoException if no matching tasks found
+     */
+    public ArrayList<Task> find(String taskDesc) throws LeoException{
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        String keyword = taskDesc.trim();
+
+        for (Task t : tasks) {
+            if (t.getTask().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(t);
+            }
+        }
+
+        if (matchingTasks.isEmpty()) {
+            throw new LeoException("No matching tasks found!");
+        }
+        return matchingTasks;
+    }
 }
