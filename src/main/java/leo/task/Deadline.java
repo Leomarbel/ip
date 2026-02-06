@@ -1,12 +1,12 @@
 package leo.task;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 /** Represents a task with a specific deadline date and time. */
 public class Deadline extends Task {
-    DateTimeFormatter formatter =
+    private DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
     private LocalDateTime deadline;
 
@@ -33,7 +33,7 @@ public class Deadline extends Task {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        String mark = isMarked()? "X" : " ";
+        String mark = isMarked() ? "X" : " ";
         return "[D]" + "[" + mark + "] " + getTask() + " [Due: "
                 + deadline.format(formatter) + "]";
     }

@@ -30,7 +30,7 @@ public class Event extends Task {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        String mark = super.isMarked()? "X" : " ";
+        String mark = super.isMarked() ? "X" : " ";
         return "[E]" + "[" + mark + "] " + super.getTask() + " [" + start + " --- " + end + "]";
     }
 }

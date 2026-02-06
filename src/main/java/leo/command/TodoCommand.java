@@ -1,12 +1,12 @@
 package leo.command;
 
+import java.io.IOException;
+
+import leo.LeoException;
 import leo.Storage;
 import leo.TaskList;
 import leo.Ui;
-import leo.LeoException;
 import leo.task.Todo;
-
-import java.io.IOException;
 
 /** Command to add a todo task without time constraints. */
 public class TodoCommand extends Command {
@@ -23,8 +23,8 @@ public class TodoCommand extends Command {
 
     /**
      * @inheritDoc
-     * Executes todo command by creating todo, adding to task list,
-     * saving, and displaying result.
+     *      Executes todo command by creating todo, adding to task list,
+     *      saving, and displaying result.
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
@@ -35,7 +35,7 @@ public class TodoCommand extends Command {
         } catch (IOException e) {
             ui.showError("Unable to save tasks: " + e.getMessage());
         }
-        ui.showLeoReply(todo + "\n Current Tasks: " + tasks.size() );
+        ui.showLeoReply(todo + "\n Current Tasks: " + tasks.size());
 
     }
 }

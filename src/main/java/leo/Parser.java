@@ -34,12 +34,12 @@ public class Parser {
         CommandType command = parseCommand(parts[0]);
 
         switch (command) {
-            case LIST, BYE:
-                break;
-            default:
-                if (parts.length < 2) {
-                    throw new LeoException("Missing description or index.");
-                }
+        case LIST, BYE:
+            break;
+        default:
+            if (parts.length < 2) {
+                throw new LeoException("Missing description or index.");
+            }
         }
 
         switch (command) {

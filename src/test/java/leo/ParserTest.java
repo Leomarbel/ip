@@ -1,9 +1,24 @@
 package leo;
-import leo.command.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import leo.command.Command;
+import leo.command.DeadlineCommand;
+import leo.command.DeleteCommand;
+import leo.command.EventCommand;
+import leo.command.ExitCommand;
+import leo.command.ListCommand;
+import leo.command.MarkCommand;
+import leo.command.TodoCommand;
+import leo.command.UnmarkCommand;
+
+
 
 
 class ParserTest {
@@ -11,56 +26,56 @@ class ParserTest {
     // Test valid command parsing
     @Test
     @DisplayName("Parse valid LIST command")
-    void parse_listCommand_success() throws LeoException {
+    void listCommand_success() throws LeoException {
         Command command = Parser.parse("list");
         assertInstanceOf(ListCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse valid BYE command")
-    void parse_byeCommand_success() throws LeoException {
+    void byeCommand_success() throws LeoException {
         Command command = Parser.parse("bye");
         assertInstanceOf(ExitCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse valid MARK command with valid index")
-    void parse_markCommand_validIndex() throws LeoException {
+    void markCommand_validIndex() throws LeoException {
         Command command = Parser.parse("mark 5");
         assertInstanceOf(MarkCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse valid UNMARK command with valid index")
-    void parse_unmarkCommand_validIndex() throws LeoException {
+    void unmarkCommand_validIndex() throws LeoException {
         Command command = Parser.parse("unmark 3");
         assertInstanceOf(UnmarkCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse valid DELETE command with valid index")
-    void parse_deleteCommand_validIndex() throws LeoException {
+    void deleteCommand_validIndex() throws LeoException {
         Command command = Parser.parse("delete 2");
         assertInstanceOf(DeleteCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse valid TODO command with description")
-    void parse_todoCommand_validDescription() throws LeoException {
+    void todoCommand_validDescription() throws LeoException {
         Command command = Parser.parse("todo Read book");
         assertInstanceOf(TodoCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse valid DEADLINE command with description")
-    void parse_deadlineCommand_validDescription() throws LeoException {
+    void deadlineCommand_validDescription() throws LeoException {
         Command command = Parser.parse("deadline Submit assignment /by 2024-12-25 2359");
         assertInstanceOf(DeadlineCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse valid EVENT command with description")
-    void parse_eventCommand_validDescription() throws LeoException {
+    void eventCommand_validDescription() throws LeoException {
         Command command = Parser.parse("event Team meeting /from 2pm /to 4pm");
         assertInstanceOf(EventCommand.class, command);
     }
@@ -68,7 +83,7 @@ class ParserTest {
     // Test error cases for MARK/UNMARK/DELETE
     @Test
     @DisplayName("Parse MARK command missing index throws exception")
-    void parse_markCommand_missingIndex_throwsException() {
+    void markCommand_missingIndex_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("mark");
         });
@@ -77,7 +92,7 @@ class ParserTest {
 
     @Test
     @DisplayName("Parse MARK command with non-numeric index throws exception")
-    void parse_markCommand_invalidIndex_throwsException() {
+    void markCommand_invalidIndex_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("mark abc");
         });
@@ -86,21 +101,21 @@ class ParserTest {
 
     @Test
     @DisplayName("Parse MARK command with negative index creates command")
-    void parse_markCommand_negativeIndex_createsCommand() throws LeoException {
+    void markCommand_negativeIndex_createsCommand() throws LeoException {
         Command command = Parser.parse("mark -1");
         assertInstanceOf(MarkCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse MARK command with zero index creates command")
-    void parse_markCommand_zeroIndex_createsCommand() throws LeoException {
+    void markCommand_zeroIndex_createsCommand() throws LeoException {
         Command command = Parser.parse("mark 0");
         assertInstanceOf(MarkCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse DELETE command missing index throws exception")
-    void parse_deleteCommand_missingIndex_throwsException() {
+    void deleteCommand_missingIndex_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("delete");
         });
@@ -110,7 +125,7 @@ class ParserTest {
     // Test error cases for TODO/DEADLINE/EVENT
     @Test
     @DisplayName("Parse TODO command missing description throws exception")
-    void parse_todoCommand_missingDescription_throwsException() {
+    void todoCommand_missingDescription_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("todo");
         });
@@ -119,7 +134,7 @@ class ParserTest {
 
     @Test
     @DisplayName("Parse DEADLINE command missing description throws exception")
-    void parse_deadlineCommand_missingDescription_throwsException() {
+    void deadlineCommand_missingDescription_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("deadline");
         });
@@ -128,7 +143,7 @@ class ParserTest {
 
     @Test
     @DisplayName("Parse EVENT command missing description throws exception")
-    void parse_eventCommand_missingDescription_throwsException() {
+    void eventCommand_missingDescription_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("event");
         });
@@ -138,7 +153,7 @@ class ParserTest {
     // Test unknown commands
     @Test
     @DisplayName("Parse unknown command throws exception")
-    void parse_unknownCommand_throwsException() {
+    void unknownCommand_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("randomcommand 1");
         });
@@ -147,7 +162,7 @@ class ParserTest {
 
     @Test
     @DisplayName("Parse gibberish command throws exception")
-    void parse_gibberishCommand_throwsException() {
+    void gibberishCommand_throwsException() {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("!@#$% dsa");
         });
@@ -158,14 +173,14 @@ class ParserTest {
     // Test commands with extra whitespace
     @Test
     @DisplayName("Parse command with leading/trailing whitespace")
-    void parse_command_withExtraWhitespace() throws LeoException {
+    void command_withExtraWhitespace() throws LeoException {
         Command command = Parser.parse("  todo   Read book  ");
         assertInstanceOf(TodoCommand.class, command);
     }
 
     @Test
     @DisplayName("Parse MARK command with extra whitespace")
-    void parse_markCommand_withExtraWhitespace() throws LeoException {
+    void markCommand_withExtraWhitespace() throws LeoException {
         Command command = Parser.parse("  mark   5  ");
         assertInstanceOf(MarkCommand.class, command);
     }
@@ -173,7 +188,7 @@ class ParserTest {
     // Test command with multiple spaces in description
     @Test
     @DisplayName("Parse TODO command with multiple words")
-    void parse_todoCommand_withMultipleWords() throws LeoException {
+    void todoCommand_withMultipleWords() throws LeoException {
         Command command = Parser.parse("todo Read book and write summary");
         assertInstanceOf(TodoCommand.class, command);
     }
@@ -181,7 +196,7 @@ class ParserTest {
     // Test boundary: maximum integer
     @Test
     @DisplayName("Parse command with maximum integer index")
-    void parse_command_withMaxIntegerIndex() throws LeoException {
+    void command_withMaxIntegerIndex() throws LeoException {
         String maxInt = String.valueOf(Integer.MAX_VALUE);
         Command command = Parser.parse("mark " + maxInt);
         assertInstanceOf(MarkCommand.class, command);
@@ -205,7 +220,7 @@ class ParserTest {
     // Test that commands without parameters work correctly
     @Test
     @DisplayName("Commands without parameters (LIST, BYE) work with extra text")
-    void parse_noParamCommands_withExtraText_throwsException() {
+    void noParamCommands_withExtraText_throwsException() {
         // LIST and BYE should ignore extra text or throw exception
         // Depends on your implementation - currently they ignore extra text
         assertDoesNotThrow(() -> {
@@ -217,7 +232,7 @@ class ParserTest {
     // Test integration: multiple commands in sequence
     @Test
     @DisplayName("Parse multiple valid commands in sequence")
-    void parse_multipleCommands_integration() throws LeoException {
+    void multipleCommands_integration() throws LeoException {
         Command[] commands = new Command[]{
                 Parser.parse("todo Task 1"),
                 Parser.parse("deadline Task 2 /by tomorrow"),

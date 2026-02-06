@@ -5,14 +5,12 @@ import leo.Storage;
 import leo.TaskList;
 import leo.Ui;
 
-import java.util.ArrayList;
-
 /** Command to display all tasks in the list. */
 public class ListCommand extends Command {
 
     /**
      * @inheritDoc
-     * Executes list command by displaying all tasks with numbering.
+     *      Executes list command by displaying all tasks with numbering.
      */
 
     @Override

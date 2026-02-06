@@ -1,33 +1,33 @@
 package leo.command;
 
-import leo.LeoException;
-import leo.Storage;
-import leo.TaskList;
-import leo.Ui;
-import leo.task.Deadline;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 
+import leo.LeoException;
+import leo.Storage;
+import leo.TaskList;
+import leo.Ui;
+import leo.task.Deadline;
+
 /** Command to add a deadline task with specific due date/time. */
 public class DeadlineCommand extends Command {
-    private String taskDesc;
     private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
-            .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HHmm"))   // "2/12/2019 1800"
-            .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"))  // "2/12/2019 18:00"
+            .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HHmm")) // "2/12/2019 1800"
+            .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")) // "2/12/2019 18:00"
 
-            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"))  // "02/12/2019 1800"
+            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm")) // "02/12/2019 1800"
             .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) // "02/12/2019 18:00"
 
-            .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HHmm"))    // "12/2/2019 1800"
-            .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HH:mm"))   // "12/2/2019 18:00"
+            .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HHmm")) // "12/2/2019 1800"
+            .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HH:mm")) // "12/2/2019 18:00"
 
-            .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HHmm"))  // "12/02/2019 1800"
+            .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HHmm")) // "12/02/2019 1800"
             .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")) // "12/02/2019 18:00"
             .toFormatter();
+    private String taskDesc;
 
     /**
      * Creates a DeadlineCommand with task description.
@@ -40,8 +40,8 @@ public class DeadlineCommand extends Command {
 
     /**
      * @inheritDoc
-     * Check for correct format of deadline (task) /by (time format)
-     * Add the Deadline Task into the Tasklist
+     *      Check for correct format of deadline (task) /by (time format)
+     *      Add the Deadline Task into the Tasklist
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
@@ -59,7 +59,7 @@ public class DeadlineCommand extends Command {
             tasks.addTask(d);
             ui.showLeoReply(d + "\n Current Tasks: " + tasks.size());
         } catch (DateTimeParseException e) {
-            String format = """ 
+            String format = """
                             Acceptable formats:
                             d/M/yyyy HHmm
                             dd/MM/yyyy HHmm

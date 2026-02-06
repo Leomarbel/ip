@@ -11,13 +11,13 @@ public abstract class Task {
      * @param task The task description.
      * @param hasMarked Whether the task is marked as done.
      */
-    public Task (String task, boolean hasMarked) {
+    public Task(String task, boolean hasMarked) {
         this.task = task;
         this.hasMarked = hasMarked;
     }
 
     /** Marks the task as done. */
-    public void mark(){
+    public void mark() {
         this.hasMarked = true;
     }
 

@@ -1,11 +1,11 @@
 package leo.command;
 
+import java.io.IOException;
+
 import leo.LeoException;
 import leo.Storage;
 import leo.TaskList;
 import leo.Ui;
-
-import java.io.IOException;
 
 /** Command to mark a task as done. */
 public class MarkCommand extends Command {
@@ -20,8 +20,9 @@ public class MarkCommand extends Command {
         this.index = index;
     }
 
-    /** {@inheritDoc}
-     * Check for correct index and unmark the task
+    /**
+     * @inheritDoc
+     *      Check for correct index and unmark the task
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
