@@ -16,7 +16,7 @@ public class Todo extends Task {
     /** {@inheritDoc} */
     @Override
     public String toSaveState() {
-        String mark = isMarked()? "X" : "O";
+        String mark = isMarked() ? "X" : "O";
         return "T | " + mark + " | " + getTask();
 
     }
@@ -24,7 +24,7 @@ public class Todo extends Task {
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        String mark = isMarked()? "X" : " ";
+        String mark = isMarked() ? "X" : " ";
         return "[T]" + "[" + mark + "] " + getTask();
     }
 }

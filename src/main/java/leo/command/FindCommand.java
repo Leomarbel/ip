@@ -1,15 +1,15 @@
 package leo.command;
 
+import java.util.ArrayList;
+
 import leo.LeoException;
 import leo.Storage;
 import leo.TaskList;
-import leo.task.Task;
 import leo.Ui;
-
-import java.util.ArrayList;
+import leo.task.Task;
 
 /** Command to search for tasks containing a specific keyword. */
-public class FindCommand extends Command{
+public class FindCommand extends Command {
     private String taskDesc;
     public FindCommand(String taskDesc) {
         this.taskDesc = taskDesc;
@@ -17,8 +17,8 @@ public class FindCommand extends Command{
 
     /**
      * @inheritDoc
-     * Obtains an ArrayList of Tasks that contains the matching keyword
-     * and display the results to the user.
+     *      Obtains an ArrayList of Tasks that contains the matching keyword
+     *      and display the results to the user.
      *
      * @throws LeoException Throws when no matching keyword found.
      */

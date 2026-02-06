@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 /** Handles all user interface interactions including input and output. */
 public class Ui {
-    private final Scanner sc;
     static final String LOGO = """
              __        _______   _________
             |  |      |   ____| |   ___   |
@@ -13,6 +12,7 @@ public class Ui {
             |  |____  |  |____  |  |___|  |
             |_______| |_______| |_________|
            """;
+    private final Scanner sc;
     /** Creates an Ui instance with scanner for user input. */
     public Ui() {
         sc = new Scanner(System.in);

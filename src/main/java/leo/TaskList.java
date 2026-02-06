@@ -1,15 +1,16 @@
 package leo;
 
-import leo.task.Task;
 import java.util.ArrayList;
+
+import leo.task.Task;
 
 /** Manages a collection of tasks and provides operations on them */
 public class TaskList {
-    public ArrayList<Task> tasks;
+    private ArrayList<Task> tasks;
 
     /**
      * Creates TaskList with existing task collection.
-     * @param
+     * @param tasks The list of tasks
      */
     TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
@@ -101,7 +102,7 @@ public class TaskList {
      * @return an ArrayList of Task objects that contain the keyword
      * @throws LeoException if no matching tasks found
      */
-    public ArrayList<Task> find(String taskDesc) throws LeoException{
+    public ArrayList<Task> find(String taskDesc) throws LeoException {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         String keyword = taskDesc.trim();
 

@@ -1,21 +1,21 @@
 package leo;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 import leo.task.Deadline;
 import leo.task.Event;
 import leo.task.Task;
 import leo.task.Todo;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.io.FileWriter;
-import java.io.File;
-import java.util.Scanner;
-
 /** Manages file storage operations for task data persistence */
 public class Storage {
+    private static ArrayList<Task> datas = new ArrayList<>();
     private String filePath;
-    static ArrayList<Task> datas = new ArrayList<>();
 
     /**
      * Creates a Storage instance with specified file path.
@@ -41,7 +41,7 @@ public class Storage {
         }
         Scanner s = new Scanner(file);
         while (s.hasNext()) {
-            datas.add(fromSaveState(s.nextLine()));
+            datas.add(convertFromSave(s.nextLine()));
         }
         s.close();
         return datas;
@@ -53,17 +53,17 @@ public class Storage {
      * @param line The saved task string.
      * @return The reconstructed Task object.
      */
-    public Task fromSaveState(String line) {
+    public Task convertFromSave(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
         boolean marked = parts[1].equals("X");
         String task = parts[2];
 
         return switch (type) {
-            case "T" -> new Todo(task, marked);
-            case "D" -> new Deadline(task, marked, LocalDateTime.parse(parts[3]));
-            case "E" -> new Event(task, marked, parts[3], parts[4]);
-            default -> throw new IllegalArgumentException("Unknown leo.task.Task Type");
+        case "T" -> new Todo(task, marked);
+        case "D" -> new Deadline(task, marked, LocalDateTime.parse(parts[3]));
+        case "E" -> new Event(task, marked, parts[3], parts[4]);
+        default -> throw new IllegalArgumentException("Unknown leo.task.Task Type");
         };
 
     }
@@ -74,7 +74,7 @@ public class Storage {
      * @param data List of task strings to save.
      * @throws IOException If file operations fail.
      */
-    public void save (ArrayList<String> data) throws IOException{
+    public void save(ArrayList<String> data) throws IOException {
         File f = new File(filePath);
         if (!f.exists()) {
             f.getParentFile().mkdirs();
