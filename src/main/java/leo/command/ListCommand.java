@@ -14,7 +14,7 @@ public class ListCommand extends Command {
      */
 
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
         if (tasks.isEmpty()) {
             throw new LeoException("(List is empty)");
         } else {
@@ -25,7 +25,7 @@ public class ListCommand extends Command {
                         .append(tasks.get(i))
                         .append("\n");
             }
-            ui.showLeoReply(listText.toString());
+            return ui.showLeoReply(listText.toString());
         }
     }
 }

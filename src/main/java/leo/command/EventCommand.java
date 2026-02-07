@@ -29,7 +29,7 @@ public class EventCommand extends Command {
      *      adding to task list, saving, and displaying result.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
         String[] eventParts = taskDesc.split("/from ", 2);
 
         if (eventParts.length < 2) {
@@ -46,9 +46,9 @@ public class EventCommand extends Command {
         try {
             storage.save(tasks.toSaveFormat());
         } catch (IOException e) {
-            ui.showError("Unable to save tasks: " + e.getMessage());
+            throw new LeoException("Unable to save tasks: " + e.getMessage());
         }
-        ui.showLeoReply(event + "\n Current Tasks: " + tasks.size());
+        return ui.showLeoReply(event + "\n Current Tasks: " + tasks.size());
     }
 
     private static String[] getStrings(String parts) throws LeoException {

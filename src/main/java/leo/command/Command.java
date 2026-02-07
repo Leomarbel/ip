@@ -16,9 +16,10 @@ public abstract class Command {
      * @param tasks The task list to operate on.
      * @param ui The user interface for displaying results.
      * @param storage The storage system for saving changes.
+     * @return The appropriate line that Leo would reply with for GUI
      * @throws LeoException If the command cannot be executed.
      */
-    public abstract void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException;
+    public abstract String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException;
 
     /**
      * Checks if this command is an exit command.

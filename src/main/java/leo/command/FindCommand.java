@@ -23,7 +23,7 @@ public class FindCommand extends Command {
      * @throws LeoException Throws when no matching keyword found.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
         ArrayList<Task> taskFound = tasks.find(taskDesc);
         StringBuilder listText = new StringBuilder();
 
@@ -33,7 +33,7 @@ public class FindCommand extends Command {
                     .append(taskFound.get(i))
                     .append("\n");
         }
-        ui.showLeoReply(listText.toString());
+        return ui.showLeoReply(listText.toString());
     }
 
 
