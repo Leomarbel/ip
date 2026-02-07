@@ -27,15 +27,14 @@ public class TodoCommand extends Command {
      *      saving, and displaying result.
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
         Todo todo = new Todo(taskDesc, false);
         tasks.addTask(todo);
         try {
             storage.save(tasks.toSaveFormat());
         } catch (IOException e) {
-            ui.showError("Unable to save tasks: " + e.getMessage());
+            throw new LeoException("Unable to save tasks: " + e.getMessage());
         }
-        ui.showLeoReply(todo + "\n Current Tasks: " + tasks.size());
-
+        return ui.showLeoReply(todo + "\n Current Tasks: " + tasks.size());
     }
 }

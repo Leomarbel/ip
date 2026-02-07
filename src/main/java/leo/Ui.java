@@ -36,10 +36,11 @@ public class Ui {
      *
      * @param text The message to display.
      */
-    public void showLeoReply(String text) {
+    public String showLeoReply(String text) {
         printSep();
         System.out.println("Leo:\n" + text);
         printSep();
+        return "Leo:\n" + text;
     }
 
     /**

@@ -44,7 +44,8 @@ public class DeadlineCommand extends Command {
      *      Add the Deadline Task into the Tasklist
      */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+
         String[] deadlineParts = taskDesc.split("/by", 2);
 
         if (deadlineParts.length < 2) {
@@ -57,7 +58,8 @@ public class DeadlineCommand extends Command {
             LocalDateTime parsedDeadline = LocalDateTime.parse(deadlineParts[1].trim(), FORMATTER);
             Deadline d = new Deadline(deadlineParts[0].trim(), false, parsedDeadline);
             tasks.addTask(d);
-            ui.showLeoReply(d + "\n Current Tasks: " + tasks.size());
+            storage.save(tasks.toSaveFormat());
+            return ui.showLeoReply(d + "\n Current Tasks: " + tasks.size());
         } catch (DateTimeParseException e) {
             String format = """
                             Acceptable formats:
@@ -67,12 +69,8 @@ public class DeadlineCommand extends Command {
                             MM/dd/yyyy HHmm
                             """;
             throw new LeoException("Your Date & Time format is wrong!" + "\n" + format);
-        }
-
-        try {
-            storage.save(tasks.toSaveFormat());
         } catch (IOException e) {
-            ui.showError("Unable to save tasks: " + e.getMessage());
+            throw new LeoException("Unable to save tasks: " + e.getMessage());
         }
     }
 }

@@ -9,8 +9,8 @@ public class ExitCommand extends Command {
 
     /** @inheritDoc */
     @Override
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
-        ui.showLeoReply("Bye! Hope to see you again soon!");
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+        return ui.showLeoReply("Bye! Hope to see you again soon!");
     }
 
     /** @inheritDoc */

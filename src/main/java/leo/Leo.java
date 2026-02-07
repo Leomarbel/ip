@@ -16,6 +16,8 @@ public class Leo {
     private Storage storage;
     private TaskList tasks;
     private Ui ui;
+    private String startupMessage = null;
+
 
 
     /**
@@ -31,8 +33,10 @@ public class Leo {
         try {
             tasks = new TaskList(storage.loadTasks());
         } catch (IOException e) {
-            ui.showError("Failed to load Tasks");
+            //ui.showError("Failed to load Tasks");
             tasks = new TaskList();
+            startupMessage = "No previous save found. Starting with an empty task list.";
+
         }
     }
 
@@ -67,4 +71,18 @@ public class Leo {
     public static void main(String[] args) {
         new Leo("./data/leo_mem.txt").run();
     }
+
+    public String getResponse(String input) {
+        try {
+            Command command = Parser.parse(input);
+            return command.execute(tasks, ui, storage);
+        } catch (LeoException e) {
+            return e.getMessage();
+        }
+    }
+
+    public String getStartupMessage() {
+        return startupMessage;
+    }
+
 }
