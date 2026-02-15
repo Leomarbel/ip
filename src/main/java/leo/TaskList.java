@@ -22,8 +22,7 @@ public class TaskList {
     }
 
     /** Adds a task to the list. */
-    public void addTask(Task task) {
-        this.tasks.add(task);
+    public void addTask(Task task) { this.tasks.add(task);
     }
 
     /**
@@ -37,6 +36,7 @@ public class TaskList {
         if (index > tasks.size() - 1 || index < 0) {
             throw new LeoException("Error!!! Index outside of list bounds :(");
         }
+
         return tasks.remove(index);
     }
 
@@ -74,8 +74,15 @@ public class TaskList {
     public ArrayList<String> toSaveFormat() {
         ArrayList<String> data = new ArrayList<>();
         for (leo.task.Task t : tasks) {
-            data.add(t.toSaveState());
+            assert t != null : "Null task found in tasks list";
+            String saveState = t.toSaveState();
+            assert saveState != null :
+                    "Task returned null save state: ";
+            data.add(saveState);
+
         }
+        assert data.size() == tasks.size() :
+                "Save data size doesn't match tasks size: " + data.size() + " vs " + tasks.size();
         return data;
     }
 
@@ -103,6 +110,8 @@ public class TaskList {
      * @throws LeoException if no matching tasks found
      */
     public ArrayList<Task> find(String taskDesc) throws LeoException {
+        assert taskDesc != null :
+                "Parser Class did not handle null case for command using find()";
         ArrayList<Task> matchingTasks = new ArrayList<>();
         String keyword = taskDesc.trim();
 
