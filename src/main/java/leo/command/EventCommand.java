@@ -30,29 +30,25 @@ public class EventCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
-        String[] eventParts = taskDesc.split("/from ", 2);
-
-        if (eventParts.length < 2) {
-            throw new LeoException("The description of an event must have /from.");
-        }
-        String[] eventDuration = eventParts[1].split("/to", 2);
-
-        if (eventDuration.length < 2) {
-            throw new LeoException("The description of an event must have /to.");
-        }
-        Event event = new Event(eventParts[0], false, eventDuration[0], eventDuration[1]);
+        //Validate taskDesc to check if correct number of parts and split
+        //taskDesc to appropriate parts
+        String[] eventParts = validateAndSplitTask();
+        Event event = new Event(eventParts[0], false, eventParts[1], eventParts[2]);
         tasks.addTask(event);
+        saveTask(tasks, storage);
+        return ui.showLeoReply(event + "\n Current Tasks: " + tasks.size());
+    }
 
+    private void saveTask(TaskList tasks, Storage storage) throws LeoException {
         try {
             storage.save(tasks.toSaveFormat());
         } catch (IOException e) {
             throw new LeoException("Unable to save tasks: " + e.getMessage());
         }
-        return ui.showLeoReply(event + "\n Current Tasks: " + tasks.size());
     }
 
-    private static String[] getStrings(String parts) throws LeoException {
-        String[] eventParts = parts.split("/from ", 2);
+    private String[] validateAndSplitTask() throws LeoException {
+        String[] eventParts = taskDesc.split("/from ", 2);
 
         if (eventParts.length < 2) {
             throw new LeoException("The description of an event must have /from.");
@@ -61,8 +57,11 @@ public class EventCommand extends Command {
         String[] eventDuration = eventParts[1].split("/to", 2);
         if (eventDuration.length < 2) {
             throw new LeoException("The description of an event must have /to.");
-
         }
-        return eventDuration;
+        return new String[]{
+                eventParts[0].trim(), // task name
+                eventDuration[0].trim(), // from date/time
+                eventDuration[1].trim() // to date/time
+        };
     }
 }

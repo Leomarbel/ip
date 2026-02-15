@@ -17,15 +17,14 @@ public class ListCommand extends Command {
     public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
         if (tasks.isEmpty()) {
             throw new LeoException("(List is empty)");
-        } else {
-            StringBuilder listText = new StringBuilder();
-            for (int i = 0; i < tasks.size(); i++) {
-                listText.append((i + 1))
-                        .append(". ")
-                        .append(tasks.get(i))
-                        .append("\n");
-            }
-            return ui.showLeoReply(listText.toString());
         }
+        StringBuilder listText = new StringBuilder();
+        for (int i = 0; i < tasks.size(); i++) {
+            listText.append((i + 1))
+                    .append(". ")
+                    .append(tasks.get(i))
+                    .append("\n");
+        }
+        return ui.showLeoReply(listText.toString());
     }
 }

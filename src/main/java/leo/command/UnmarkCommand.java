@@ -17,7 +17,6 @@ public class UnmarkCommand extends Command {
      * @param index The task position to unmark.
      */
     public UnmarkCommand(int index) {
-
         this.index = index;
     }
 
@@ -32,11 +31,15 @@ public class UnmarkCommand extends Command {
         }
         tasks.unmarkTask(index);
 
+        saveTask(tasks, storage);
+        return ui.showLeoReply("Unmarked: " + tasks.get(index));
+    }
+
+    private void saveTask(TaskList tasks, Storage storage) throws LeoException {
         try {
             storage.save(tasks.toSaveFormat());
         } catch (IOException e) {
             throw new LeoException("Unable to save tasks: " + e.getMessage());
         }
-        return ui.showLeoReply("Unmarked: " + tasks.get(index));
     }
 }

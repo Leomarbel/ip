@@ -14,19 +14,7 @@ import leo.task.Deadline;
 
 /** Command to add a deadline task with specific due date/time. */
 public class DeadlineCommand extends Command {
-    private static final DateTimeFormatter FORMATTER = new DateTimeFormatterBuilder()
-            .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HHmm")) // "2/12/2019 1800"
-            .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HH:mm")) // "2/12/2019 18:00"
-
-            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm")) // "02/12/2019 1800"
-            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) // "02/12/2019 18:00"
-
-            .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HHmm")) // "12/2/2019 1800"
-            .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HH:mm")) // "12/2/2019 18:00"
-
-            .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HHmm")) // "12/02/2019 1800"
-            .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm")) // "12/02/2019 18:00"
-            .toFormatter();
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = createDateTimeFormatter();
     private String taskDesc;
 
     /**
@@ -45,7 +33,19 @@ public class DeadlineCommand extends Command {
      */
     @Override
     public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
+        //Validate taskDesc to check if correct number of parts and split
+        //taskDesc to appropriate parts
+        String[] deadlineParts = validateAndSplitTask();
 
+        //Parse and create deadline task
+        Deadline d = createDeadlineTask(deadlineParts);
+        tasks.addTask(d);
+
+        saveTask(tasks, ui, storage, d);
+        return ui.showLeoReply(d + "\n Current Tasks: " + tasks.size());
+    }
+
+    private String[] validateAndSplitTask() throws LeoException {
         String[] deadlineParts = taskDesc.split("/by", 2);
 
         if (deadlineParts.length < 2) {
@@ -54,23 +54,54 @@ public class DeadlineCommand extends Command {
         if (deadlineParts[1].isEmpty()) {
             throw new LeoException("Deadline must have an input!");
         }
+        return deadlineParts;
+    }
+
+    private Deadline createDeadlineTask(String[] deadlineParts) throws LeoException {
         try {
-            LocalDateTime parsedDeadline = LocalDateTime.parse(deadlineParts[1].trim(), FORMATTER);
-            Deadline d = new Deadline(deadlineParts[0].trim(), false, parsedDeadline);
-            tasks.addTask(d);
-            storage.save(tasks.toSaveFormat());
-            return ui.showLeoReply(d + "\n Current Tasks: " + tasks.size());
+            String taskName = deadlineParts[0].trim();
+            String deadlineDateTime = deadlineParts[1].trim();
+            LocalDateTime parsedDeadline = LocalDateTime.parse(
+                    deadlineDateTime,
+                    DATE_TIME_FORMATTER
+            );
+            return new Deadline(taskName, false, parsedDeadline);
         } catch (DateTimeParseException e) {
-            String format = """
-                            Acceptable formats:
-                            d/M/yyyy HHmm
-                            dd/MM/yyyy HHmm
-                            M/d/yyyy HHmm
-                            MM/dd/yyyy HHmm
-                            """;
-            throw new LeoException("Your Date & Time format is wrong!" + "\n" + format);
+            throw new LeoException(
+                    "Your Date & Time format is wrong!" + "\n" + getAcceptedFormatsMessage());
+        }
+    }
+
+    private void saveTask(TaskList tasks, Ui ui, Storage storage, Deadline d) throws LeoException {
+        try {
+            storage.save(tasks.toSaveFormat());
         } catch (IOException e) {
             throw new LeoException("Unable to save tasks: " + e.getMessage());
         }
+    }
+
+    /** Creates a formatter that supports multiple date/time formats. */
+    private static DateTimeFormatter createDateTimeFormatter() {
+        // Supporting multiple formats to accommodate user preferences
+        return new DateTimeFormatterBuilder()
+                .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HHmm"))
+                .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"))
+                .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"))
+                .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+                .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HHmm"))
+                .appendOptional(DateTimeFormatter.ofPattern("M/d/yyyy HH:mm"))
+                .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HHmm"))
+                .appendOptional(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))
+                .toFormatter();
+    }
+    /** Returns a user-friendly message listing accepted date formats. */
+    private String getAcceptedFormatsMessage() {
+        return """
+               Accepted formats (examples):
+               - 2/12/2019 1800 or 2/12/2019 18:00
+               - 02/12/2019 1800 or 02/12/2019 18:00
+               - 12/2/2019 1800 or 12/2/2019 18:00
+               - 12/02/2019 1800 or 12/02/2019 18:00
+               """;
     }
 }
