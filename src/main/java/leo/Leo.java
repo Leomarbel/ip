@@ -32,7 +32,6 @@ public class Leo {
         try {
             tasks = new TaskList(storage.loadTasks());
         } catch (IOException e) {
-            //ui.showError("Failed to load Tasks");
             tasks = new TaskList();
         }
     }

@@ -75,6 +75,7 @@ public class Parser {
         default:
             if (parts.length < 2) {
                 throw new LeoException("Missing description or index.");
+                assertHasParameters
             }
         }
     }
@@ -109,5 +110,12 @@ public class Parser {
         } catch (IllegalArgumentException e) {
             return CommandType.UNKNOWN;
         }
+    }
+
+
+    private static void assertHasParameters(String[] parts, CommandType command){
+        assert parts.length >= 2 :
+                command + " command missing parameters. Possibly wrongly included "
+                        + command + " command in single parameter commands.";
     }
 }

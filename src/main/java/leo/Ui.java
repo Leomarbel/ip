@@ -37,6 +37,7 @@ public class Ui {
      * @param text The message to display.
      */
     public String showLeoReply(String text) {
+        assert text != null : "Missing showLeoReply text";
         printSep();
         System.out.println("Leo:\n" + text);
         printSep();
@@ -49,6 +50,7 @@ public class Ui {
      * @param text The error message to display.
      */
     public void showError(String text) {
+        assert text != null : "Missing showError text";
         showLeoReply("Error!!! " + text);
     }
 
