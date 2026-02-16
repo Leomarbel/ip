@@ -2,9 +2,10 @@ package leo.task;
 
 /** Abstract base class for all types of tasks. */
 public abstract class Task {
+    protected static final String MARKED = "X";
+    protected static final String UNMARKED = "O";
     protected boolean hasMarked;
     protected String task;
-
     /**
      * Creates a Task with description and completion status.
      *
