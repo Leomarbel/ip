@@ -6,8 +6,10 @@ import java.time.temporal.ChronoUnit;
 
 /** Represents a task with a specific deadline date and time. */
 public class Deadline extends Task {
-    private DateTimeFormatter formatter =
+    private static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
+    private static final String SAVE_FORMAT = "D | %s | %s | %s";
+    private static final String DISPLAY_FORMAT = "[D][%s] %s [Due: %s]";
     private LocalDateTime deadline;
 
     /**
@@ -25,17 +27,16 @@ public class Deadline extends Task {
     /** {@inheritDoc} */
     @Override
     public String toSaveState() {
-        String mark = isMarked() ? "X" : "O";
-        return "D | " + mark + " | "
-                + getTask() + " | " + deadline;
+        String mark = isMarked() ? MARKED : UNMARKED;
+        return String.format(SAVE_FORMAT, mark, getTask(), deadline);
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        String mark = isMarked() ? "X" : " ";
-        return "[D]" + "[" + mark + "] " + getTask() + " [Due: "
-                + deadline.format(formatter) + "]";
+        String mark = isMarked() ? MARKED : " ";
+        return String.format(DISPLAY_FORMAT, mark, getTask(),
+                deadline.format(DISPLAY_FORMATTER));
     }
 }
 

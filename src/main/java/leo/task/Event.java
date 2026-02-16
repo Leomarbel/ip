@@ -2,6 +2,8 @@ package leo.task;
 
 /** Represents an event task with start and end times. */
 public class Event extends Task {
+    private static final String SAVE_FORMAT = "E | %s | %s | %s | %s";
+    private static final String DISPLAY_FORMAT = "[E][%s] %s [%s --- %s]";
     private String start;
     private String end;
 
@@ -22,15 +24,14 @@ public class Event extends Task {
     /** {@inheritDoc} */
     @Override
     public String toSaveState() {
-        String mark = isMarked() ? "X" : "O";
-        return "E | " + mark + " | "
-                + getTask() + " | " + start + " | " + end;
+        String mark = isMarked() ? MARKED : UNMARKED;
+        return String.format(SAVE_FORMAT, mark, getTask(), start, end);
     }
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        String mark = super.isMarked() ? "X" : " ";
-        return "[E]" + "[" + mark + "] " + super.getTask() + " [" + start + " --- " + end + "]";
+        String mark = super.isMarked() ? MARKED : " ";
+        return String.format(DISPLAY_FORMAT, mark, getTask(), start, end);
     }
 }

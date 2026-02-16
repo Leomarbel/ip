@@ -30,11 +30,15 @@ public class TodoCommand extends Command {
     public String execute(TaskList tasks, Ui ui, Storage storage) throws LeoException {
         Todo todo = new Todo(taskDesc, false);
         tasks.addTask(todo);
+        saveTask(tasks, storage);
+        return ui.showLeoReply(todo + "\n Current Tasks: " + tasks.size());
+    }
+
+    private void saveTask(TaskList tasks, Storage storage) throws LeoException {
         try {
             storage.save(tasks.toSaveFormat());
         } catch (IOException e) {
             throw new LeoException("Unable to save tasks: " + e.getMessage());
         }
-        return ui.showLeoReply(todo + "\n Current Tasks: " + tasks.size());
     }
 }
