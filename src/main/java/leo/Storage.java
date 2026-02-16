@@ -41,7 +41,9 @@ public class Storage {
         }
         Scanner s = new Scanner(file);
         while (s.hasNext()) {
-            datas.add(convertFromSave(s.nextLine()));
+            Task t = convertFromSave(s.nextLine());
+            assert t != null : "Converted task should not be null";
+            datas.add(t);
         }
         s.close();
         return datas;
@@ -61,8 +63,18 @@ public class Storage {
 
         return switch (type) {
         case "T" -> new Todo(task, marked);
-        case "D" -> new Deadline(task, marked, LocalDateTime.parse(parts[3]));
-        case "E" -> new Event(task, marked, parts[3], parts[4]);
+        case "D" -> {
+            if (parts.length < 4) {
+                throw new IllegalArgumentException("Corrupted save file: Deadline missing date");
+            }
+            yield new Deadline(task, marked, LocalDateTime.parse(parts[3]));
+        }
+        case "E" -> {
+            if (parts.length < 5) {
+                throw new IllegalArgumentException("Corrupted save file: Event missing time info");
+            }
+            yield new Event(task, marked, parts[3], parts[4]);
+        }
         default -> throw new IllegalArgumentException("Unknown leo.task.Task Type");
         };
 

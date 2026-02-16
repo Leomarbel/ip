@@ -41,7 +41,6 @@ public class Parser {
                 throw new LeoException("Missing description or index.");
             }
         }
-
         switch (command) {
         case LIST:
             return new ListCommand();
@@ -50,6 +49,8 @@ public class Parser {
             return new ExitCommand();
 
         case MARK:
+            assertHasParameters(parts, command);
+
             try {
                 int index = Integer.parseInt(parts[1]) - 1;
 
@@ -59,6 +60,8 @@ public class Parser {
             }
 
         case UNMARK:
+            assertHasParameters(parts, command);
+
             try {
                 int index = Integer.parseInt(parts[1]) - 1;
                 return new UnmarkCommand(index);
@@ -67,15 +70,23 @@ public class Parser {
             }
 
         case TODO:
+            assertHasParameters(parts, command);
+
             return new TodoCommand(parts[1]);
 
         case DEADLINE:
+            assertHasParameters(parts, command);
+
             return new DeadlineCommand(parts[1]);
 
         case EVENT:
+            assertHasParameters(parts, command);
+
             return new EventCommand(parts[1]);
 
         case DELETE:
+            assertHasParameters(parts, command);
+
             try {
                 int index = Integer.parseInt(parts[1]) - 1;
                 return new DeleteCommand(index);
@@ -84,6 +95,8 @@ public class Parser {
             }
 
         case FIND:
+            assertHasParameters(parts, command);
+
             return new FindCommand(parts[1]);
 
         case UNKNOWN:
@@ -106,4 +119,10 @@ public class Parser {
         }
     }
 
+
+    private static void assertHasParameters(String[] parts, CommandType command){
+        assert parts.length >= 2 :
+                command + " command missing parameters. Possibly wrongly included "
+                        + command + " command in single parameter commands.";
+    }
 }
