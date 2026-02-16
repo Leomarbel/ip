@@ -55,18 +55,62 @@ public class Parser {
      * @throws LeoException if command is invalid or has missing parameters.
      */
     private static Command createCommand(CommandType command, String[] parts) throws LeoException {
-        return switch (command) {
-        case LIST -> new ListCommand();
-        case BYE -> new ExitCommand();
-        case MARK -> createIndexCommand(parts, MarkCommand::new);
-        case UNMARK -> createIndexCommand(parts, UnmarkCommand::new);
-        case DELETE -> createIndexCommand(parts, DeleteCommand::new);
-        case TODO -> new TodoCommand(parts[1]);
-        case DEADLINE -> new DeadlineCommand(parts[1]);
-        case EVENT -> new EventCommand(parts[1]);
-        case FIND -> new FindCommand(parts[1]);
-        case UNKNOWN -> throw new LeoException("Unknown command: " + parts[0]);
-        };
+        switch (command) {
+        case LIST:
+            return new ListCommand();
+
+        case BYE:
+            return new ExitCommand();
+
+        case MARK:
+            assertHasParameters(parts, command);
+            try {
+                int index = Integer.parseInt(parts[1]) - 1;
+
+                return new MarkCommand(index);
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                throw new LeoException("Please provide a valid task number.");
+            }
+
+        case UNMARK:
+            assertHasParameters(parts, command);
+            try {
+                int index = Integer.parseInt(parts[1]) - 1;
+                return new UnmarkCommand(index);
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                throw new LeoException("Please provide a valid task number.");
+            }
+
+        case TODO:
+            assertHasParameters(parts, command);
+            return new TodoCommand(parts[1]);
+
+        case DEADLINE:
+            assertHasParameters(parts, command);
+            return new DeadlineCommand(parts[1]);
+
+        case EVENT:
+            assertHasParameters(parts, command);
+            return new EventCommand(parts[1]);
+
+        case DELETE:
+            assertHasParameters(parts, command);
+            try {
+                int index = Integer.parseInt(parts[1]) - 1;
+                return new DeleteCommand(index);
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                throw new LeoException("Please provide a valid task number.");
+            }
+
+        case FIND:
+            assertHasParameters(parts, command);
+            return new FindCommand(parts[1]);
+
+        case UNKNOWN:
+
+        default:
+            throw new LeoException("Unknown command: " + parts[0]);
+        }
     }
     private static void validateCommandParams(CommandType command, String[] parts) throws LeoException {
         switch (command) {
@@ -75,30 +119,9 @@ public class Parser {
         default:
             if (parts.length < 2) {
                 throw new LeoException("Missing description or index.");
-                assertHasParameters
             }
         }
     }
-
-
-    /**
-     * Validates the index to be used in executing the Command by checking if
-     * the index is within bounds.
-     * @param line the index (String form) to be parsed
-     * @param constructor the command to be instantiated by calling
-     * @return The Command to be executed
-     */
-    private static Command createIndexCommand(String[] line,
-                                              Function<Integer, Command> constructor) throws LeoException {
-        try {
-            int index = Integer.parseInt(line[1]) - 1;
-            return constructor.apply(index);
-        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            throw new LeoException("Please provide a valid task number.");
-        }
-    }
-
-
     /**
      * Converts string input to corresponding Command_Enum value.
      * @param input The command string to parse.
@@ -113,9 +136,9 @@ public class Parser {
     }
 
 
-    private static void assertHasParameters(String[] parts, CommandType command){
-        assert parts.length >= 2 :
-                command + " command missing parameters. Possibly wrongly included "
+    private static void assertHasParameters(String[] parts, CommandType command) {
+        assert parts.length >= 2
+                : command + " command missing parameters. Possibly wrongly included "
                         + command + " command in single parameter commands.";
     }
 }
