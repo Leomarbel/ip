@@ -1,7 +1,10 @@
 package leo;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
+import leo.task.Interview;
 import leo.task.Task;
 
 /** Manages a collection of tasks and provides operations on them */
@@ -22,7 +25,30 @@ public class TaskList {
     }
 
     /** Adds a task to the list. */
-    public void addTask(Task task) { this.tasks.add(task);
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
+
+    /** Adds a task to the list. */
+    public void addInterviewDate(Interview i) throws LeoException {
+        LocalDateTime date = i.getInterviewTime();
+
+        // Check if any existing task has the same date (ignoring time)
+        Optional<Interview> conflictingTask = tasks.stream()
+                .filter(t -> t instanceof Interview)
+                .map(t -> (Interview) t)
+                .filter(interview -> interview.getInterviewTime().toLocalDate()
+                        .equals(date.toLocalDate()))
+                .findFirst();
+
+        if (conflictingTask.isPresent()) {
+            Task existingTask = conflictingTask.get();
+            throw new LeoException("Conflicting Schedule! Your interview "
+                    + i.getTask() + " conflicts with " + existingTask.getTask()
+                    + " on " + date.toLocalDate());
+        }
+
+        this.tasks.add(i);
     }
 
     /**
@@ -76,13 +102,13 @@ public class TaskList {
         for (leo.task.Task t : tasks) {
             assert t != null : "Null task found in tasks list";
             String saveState = t.toSaveState();
-            assert saveState != null :
-                    "Task returned null save state: ";
+            assert saveState != null
+                    : "Task returned null save state: ";
             data.add(saveState);
 
         }
-        assert data.size() == tasks.size() :
-                "Save data size doesn't match tasks size: " + data.size() + " vs " + tasks.size();
+        assert data.size() == tasks.size()
+                : "Save data size doesn't match tasks size: " + data.size() + " vs " + tasks.size();
         return data;
     }
 
@@ -110,8 +136,8 @@ public class TaskList {
      * @throws LeoException if no matching tasks found
      */
     public ArrayList<Task> find(String taskDesc) throws LeoException {
-        assert taskDesc != null :
-                "Parser Class did not handle null case for command using find()";
+        assert taskDesc != null
+               : "Parser Class did not handle null case for command using find()";
         ArrayList<Task> matchingTasks = new ArrayList<>();
         String keyword = taskDesc.trim();
 
