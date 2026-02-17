@@ -7,10 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import leo.task.Deadline;
-import leo.task.Event;
-import leo.task.Task;
-import leo.task.Todo;
+import leo.task.*;
 
 /** Manages file storage operations for task data persistence */
 public class Storage {
@@ -74,6 +71,12 @@ public class Storage {
                 throw new IllegalArgumentException("Corrupted save file: Event missing time info");
             }
             yield new Event(task, marked, parts[3], parts[4]);
+        }
+        case "I" -> {
+            if (parts.length < 4) {
+                throw new IllegalArgumentException("Corrupted save file: Interview missing date");
+            }
+            yield new Interview(task, marked, LocalDateTime.parse(parts[3]));
         }
         default -> throw new IllegalArgumentException("Unknown leo.task.Task Type");
         };

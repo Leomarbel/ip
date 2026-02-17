@@ -1,24 +1,13 @@
 package leo;
 
-import java.util.function.Function;
-
-import leo.command.Command;
-import leo.command.DeadlineCommand;
-import leo.command.DeleteCommand;
-import leo.command.EventCommand;
-import leo.command.ExitCommand;
-import leo.command.FindCommand;
-import leo.command.ListCommand;
-import leo.command.MarkCommand;
-import leo.command.TodoCommand;
-import leo.command.UnmarkCommand;
-
+import leo.command.*;
 
 
 /** Parses user input strings into executable Command objects. */
 public class Parser {
     enum CommandType {
-        BYE, LIST, MARK, UNMARK, TODO, DEADLINE, EVENT, DELETE, FIND, UNKNOWN
+        BYE, DEADLINE, DELETE, LIST, MARK, UNMARK, TODO,
+        EVENT, FIND, INTERVIEW, UNKNOWN
     }
 
     /**
@@ -105,6 +94,9 @@ public class Parser {
         case FIND:
             assertHasParameters(parts, command);
             return new FindCommand(parts[1]);
+        case INTERVIEW:
+            assertHasParameters(parts, command);
+            return new InterviewCommand(parts[1]);
 
         case UNKNOWN:
 
