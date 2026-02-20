@@ -1,0 +1,65 @@
+.dialog-bubble {
+    -fx-padding: 10 14 10 14;
+}
+
+.user-bubble {
+    -fx-border-color: #193cb8;
+    -fx-border-width: 4;
+    -fx-background-color: #2f6df6;
+    -fx-background-radius: 10;
+}
+
+.leo-bubble {
+     -fx-border-color: #166534;
+     -fx-border-width: 4;
+     -fx-background-color: #12a84f;
+     -fx-background-radius: 10;
+ }
+
+.error-bubble {
+    -fx-border-color: #651616;
+    -fx-border-width: 4;
+    -fx-background-color: #a81212;
+    -fx-background-radius: 10;
+}
+
+.text-field {
+    -fx-text-fill: white;
+}
+
+/* ScrollPane background */
+.scroll-pane {
+    -fx-background: #1e2838;
+    -fx-background-color: #0b1a2a;
+}
+
+/* Scroll bar track */
+.scroll-bar:vertical .track,
+.scroll-bar:horizontal .track {
+    -fx-background-color: #1e2838;
+}
+
+/* Scroll bar thumb (the draggable part) */
+.scroll-bar:vertical .thumb,
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #dddddd;
+    -fx-background-radius: 6;
+}
+
+/* Thumb hover (optional but nice) */
+.scroll-bar .thumb:hover {
+    -fx-background-color: #dddddd;
+}
+
+.chat-scroll .scroll-bar .increment-button,
+.chat-scroll .scroll-bar .decrement-button {
+    -fx-padding: 2;
+    -fx-opacity: 0;
+
+}
+
+.scroll-bar {
+    -fx-pref-width: 10;
+    -fx-pref-height: 10;
+}
+

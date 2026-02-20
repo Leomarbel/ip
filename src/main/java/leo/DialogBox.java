@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 
 /**
  * Represents a dialog box consisting of an ImageView to represent the speaker's face
@@ -25,6 +26,8 @@ public class DialogBox extends HBox {
     private Label dialog;
     @FXML
     private ImageView displayPicture;
+    @FXML
+    private StackPane bubble;
 
     private DialogBox(String text, Image img) {
         try {
@@ -51,12 +54,34 @@ public class DialogBox extends HBox {
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        var db = new DialogBox(text, img);
+        db.displayPicture.setVisible(true);
+        db.displayPicture.setManaged(true);
+        db.getBubble().getStyleClass().add("user-bubble");
+        return db;
     }
 
     public static DialogBox getLeoDialog(String text, Image img) {
         var db = new DialogBox(text, img);
+        db.displayPicture.setVisible(false);
+        db.displayPicture.setManaged(false);
+
+        db.getBubble().getStyleClass().add("leo-bubble");
         db.flip();
         return db;
+    }
+
+    public static DialogBox getErrorDialog(String text, Image img) {
+        var db = new DialogBox(text, img);
+        db.displayPicture.setVisible(false);
+        db.displayPicture.setManaged(false);
+
+        db.getBubble().getStyleClass().add("error-bubble");
+        db.flip();
+        return db;
+    }
+
+    public StackPane getBubble() {
+        return bubble;
     }
 }

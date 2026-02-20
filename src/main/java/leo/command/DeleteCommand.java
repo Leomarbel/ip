@@ -35,7 +35,7 @@ public class DeleteCommand extends Command {
         tasks.deleteTask(index);
         saveTask(tasks, storage);
         return ui.showLeoReply("Deleted: " + t
-                + "\n Tasks Left: " + tasks.size());
+                + "\nTasks Left: " + tasks.size());
     }
 
     private void saveTask(TaskList tasks, Storage storage) throws LeoException {

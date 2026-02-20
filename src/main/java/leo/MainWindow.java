@@ -22,7 +22,9 @@ public class MainWindow extends AnchorPane {
 
     private Leo leo;
 
+    @FXML
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.png"));
+    @FXML
     private Image leoImage = new Image(this.getClass().getResourceAsStream("/images/Leo.png"));
 
     @FXML
@@ -42,11 +44,14 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = leo.getResponse(input);
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getLeoDialog(response, leoImage)
-        );
+        try {
+            String response = leo.getResponse(input);
+            dialogContainer.getChildren().addAll(DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getLeoDialog(response, leoImage));
+        } catch (LeoException e) {
+            dialogContainer.getChildren().addAll(DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getErrorDialog(e.getMessage(), leoImage));
+        }
         userInput.clear();
     }
 }
