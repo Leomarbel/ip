@@ -110,7 +110,11 @@ public class Parser {
             break;
         default:
             if (parts.length < 2) {
-                throw new LeoException("Missing description or index.");
+                throw new LeoException(String.format(
+                        "Command '%s' requires a parameter. Usage: %s <description/index>",
+                        command.toString().toLowerCase(),
+                        command.toString().toLowerCase()
+                ));
             }
         }
     }
