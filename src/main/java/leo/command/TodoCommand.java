@@ -31,7 +31,7 @@ public class TodoCommand extends Command {
         Todo todo = new Todo(taskDesc, false);
         tasks.addTask(todo);
         saveTask(tasks, storage);
-        return ui.showLeoReply(todo + "\n Current Tasks: " + tasks.size());
+        return ui.showLeoReply(todo + "\nCurrent Tasks: " + tasks.size());
     }
 
     private void saveTask(TaskList tasks, Storage storage) throws LeoException {

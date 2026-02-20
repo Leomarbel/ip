@@ -68,12 +68,9 @@ public class Leo {
         new Leo("./data/leo_mem.txt").run();
     }
 
-    public String getResponse(String input) {
-        try {
-            Command command = Parser.parse(input);
-            return command.execute(tasks, ui, storage);
-        } catch (LeoException e) {
-            return e.getMessage();
-        }
+    public String getResponse(String input) throws LeoException {
+        Command command = Parser.parse(input);
+        return command.execute(tasks, ui, storage);
+
     }
 }

@@ -41,8 +41,9 @@ public class Ui {
         printSep();
         System.out.println("Leo:\n" + text);
         printSep();
-        return "Leo:\n" + text;
+        return text;
     }
+
 
     /**
      * Displays an error message to the user.
