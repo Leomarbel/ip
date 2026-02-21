@@ -16,8 +16,7 @@ public class Leo {
     private Storage storage;
     private TaskList tasks;
     private Ui ui;
-
-
+    private String startupMessage = null;
 
     /**
      * Constructs a new Leo instance with the specified file path for data storage.
@@ -32,6 +31,9 @@ public class Leo {
         try {
             tasks = new TaskList(storage.loadTasks());
         } catch (IOException e) {
+            tasks = new TaskList();
+        } catch (LeoException e) {
+            startupMessage = e.getMessage() + ui.showNewTask();
             tasks = new TaskList();
         }
     }
@@ -71,6 +73,9 @@ public class Leo {
     public String getResponse(String input) throws LeoException {
         Command command = Parser.parse(input);
         return command.execute(tasks, ui, storage);
+    }
 
+    public String getStartupMessage() {
+        return startupMessage;
     }
 }

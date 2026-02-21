@@ -1,6 +1,16 @@
 package leo;
 
-import leo.command.*;
+import leo.command.Command;
+import leo.command.DeadlineCommand;
+import leo.command.DeleteCommand;
+import leo.command.EventCommand;
+import leo.command.ExitCommand;
+import leo.command.FindCommand;
+import leo.command.InterviewCommand;
+import leo.command.ListCommand;
+import leo.command.MarkCommand;
+import leo.command.TodoCommand;
+import leo.command.UnmarkCommand;
 
 
 /** Parses user input strings into executable Command objects. */
@@ -28,6 +38,7 @@ public class Parser {
         validateCommandParams(command, parts);
         return createCommand(command, parts);
     }
+
     /**
      * Converts user input line by spaces
      * @param line The user input command string.
@@ -36,6 +47,7 @@ public class Parser {
     private static String[] getLineParts(String line) {
         return line.trim().split("\\s+", 2);
     }
+
     /**
      * Parses user input to the corresponding command class.
      * @param command The command from user input. (First element of user input string)
@@ -104,6 +116,7 @@ public class Parser {
             throw new LeoException("Unknown command: " + parts[0]);
         }
     }
+
     private static void validateCommandParams(CommandType command, String[] parts) throws LeoException {
         switch (command) {
         case LIST, BYE:
@@ -111,13 +124,12 @@ public class Parser {
         default:
             if (parts.length < 2) {
                 throw new LeoException(String.format(
-                        "Command '%s' requires a parameter. Usage: %s <description/index>",
-                        command.toString().toLowerCase(),
-                        command.toString().toLowerCase()
-                ));
+                        "Command '%s' requires a parameter.",
+                        command.toString().toLowerCase()));
             }
         }
     }
+
     /**
      * Converts string input to corresponding Command_Enum value.
      * @param input The command string to parse.

@@ -35,6 +35,12 @@ public class MainWindow extends AnchorPane {
     /** Injects the Duke instance */
     public void setLeo(Leo d) {
         leo = d;
+
+        if (leo.getStartupMessage() != null) {
+            dialogContainer.getChildren().add(
+                    DialogBox.getErrorDialog(leo.getStartupMessage(), leoImage)
+            );
+        }
     }
 
     /**

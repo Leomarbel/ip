@@ -18,7 +18,7 @@ public class InterviewCommand extends Command {
     private String taskDesc;
 
     /**
-     * Creates a Interview Command with task description.
+     * Creates an Interview Command with task description.
      *
      * @param taskDesc The task description including "/by" interview date.
      */
@@ -82,7 +82,6 @@ public class InterviewCommand extends Command {
 
     /** Creates a formatter that supports multiple date/time formats. */
     private static DateTimeFormatter createDateTimeFormatter() {
-        // Supporting multiple formats to accommodate user preferences
         return new DateTimeFormatterBuilder()
                 .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HHmm"))
                 .appendOptional(DateTimeFormatter.ofPattern("d/M/yyyy HH:mm"))

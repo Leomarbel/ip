@@ -7,7 +7,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import leo.task.*;
+import leo.task.Deadline;
+import leo.task.Event;
+import leo.task.Interview;
+import leo.task.Task;
+import leo.task.Todo;
 
 /** Manages file storage operations for task data persistence */
 public class Storage {
@@ -29,7 +33,7 @@ public class Storage {
      * @return List of loaded tasks.
      * @throws IOException If file operations fail.
      */
-    public ArrayList<Task> load() throws IOException {
+    public ArrayList<Task> load() throws IOException, LeoException {
         File file = new File(filePath);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -52,8 +56,11 @@ public class Storage {
      * @param line The saved task string.
      * @return The reconstructed Task object.
      */
-    public Task convertFromSave(String line) {
+    public Task convertFromSave(String line) throws LeoException {
         String[] parts = line.split(" \\| ");
+        if (parts.length < 3) {
+            throw new LeoException("Corrupted save file: Wrong save format");
+        }
         String type = parts[0];
         boolean marked = parts[1].equals("X");
         String task = parts[2];
@@ -62,23 +69,23 @@ public class Storage {
         case "T" -> new Todo(task, marked);
         case "D" -> {
             if (parts.length < 4) {
-                throw new IllegalArgumentException("Corrupted save file: Deadline missing date");
+                throw new LeoException("Corrupted save file: Deadline missing info.\n");
             }
             yield new Deadline(task, marked, LocalDateTime.parse(parts[3]));
         }
         case "E" -> {
             if (parts.length < 5) {
-                throw new IllegalArgumentException("Corrupted save file: Event missing time info");
+                throw new LeoException("Corrupted save file: Event missing time info.\n");
             }
             yield new Event(task, marked, parts[3], parts[4]);
         }
         case "I" -> {
             if (parts.length < 4) {
-                throw new IllegalArgumentException("Corrupted save file: Interview missing date");
+                throw new LeoException("Corrupted save file: Interview missing info.\n");
             }
             yield new Interview(task, marked, LocalDateTime.parse(parts[3]));
         }
-        default -> throw new IllegalArgumentException("Unknown leo.task.Task Type");
+        default -> throw new LeoException("Corrupted save file: Unknown Task Type.\n");
         };
 
     }
@@ -110,7 +117,7 @@ public class Storage {
      * @return List of loaded tasks.
      * @throws IOException If file operations fail.
      */
-    public ArrayList<Task> loadTasks() throws IOException {
+    public ArrayList<Task> loadTasks() throws IOException, LeoException {
         ArrayList<Task> tasks = load();
         return tasks;
     }

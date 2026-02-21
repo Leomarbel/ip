@@ -12,10 +12,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="654.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="leo.MainWindow">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="654.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="leo.MainWindow">
     <children>
       <HBox layoutX="1.0" layoutY="475.0" prefHeight="64.0" prefWidth="652.0" style="-fx-background-color: #1e2838; -fx-border-color: black; -fx-border-width: 4;" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" />
-        <TextField fx:id="userInput" alignment="CENTER" layoutX="11.0" layoutY="558.0" onAction="#handleUserInput" prefHeight="42.0" prefWidth="555.0" style="-fx-background-color: #101829; -fx-border-color: #364153; -fx-border-width: 4;" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="88.0" />
+        <TextField id="text-field" fx:id="userInput" alignment="CENTER" layoutX="11.0" layoutY="558.0" onAction="#handleUserInput" prefHeight="42.0" prefWidth="555.0" style="-fx-background-color: #101829; -fx-border-color: #364153; -fx-border-width: 4;" stylesheets="@style.css" text="Type your message here..." AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="11.0" AnchorPane.rightAnchor="88.0" />
         <Button fx:id="sendButton" layoutX="324.0" layoutY="558.0" mnemonicParsing="false" onAction="#handleUserInput" prefHeight="18.0" prefWidth="62.0" style="-fx-background-color: #f2b705; -fx-border-color: #ca8a04; -fx-border-width: 4;" styleClass="-fx-background-color: #f2b705;" text="➤" AnchorPane.bottomAnchor="11.0" AnchorPane.rightAnchor="14.0">
          <font>
             <Font size="15.0" />

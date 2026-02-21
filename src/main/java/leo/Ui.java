@@ -63,4 +63,8 @@ public class Ui {
     public String readCommand() {
         return sc.nextLine();
     }
+
+    public String showNewTask() {
+        return "Starting up a new Task List...";
+    }
 }

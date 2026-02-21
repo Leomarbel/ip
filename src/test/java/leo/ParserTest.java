@@ -87,7 +87,7 @@ class ParserTest {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("mark");
         });
-        assertEquals("Missing description or index.", exception.getMessage());
+        assertEquals("Command 'mark' requires a parameter.", exception.getMessage());
     }
 
     @Test
@@ -119,7 +119,7 @@ class ParserTest {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("delete");
         });
-        assertEquals("Missing description or index.", exception.getMessage());
+        assertEquals("Command 'delete' requires a parameter.", exception.getMessage());
     }
 
     // Test error cases for TODO/DEADLINE/EVENT
@@ -129,7 +129,7 @@ class ParserTest {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("todo");
         });
-        assertEquals("Missing description or index.", exception.getMessage());
+        assertEquals("Command 'todo' requires a parameter.", exception.getMessage());
     }
 
     @Test
@@ -138,7 +138,7 @@ class ParserTest {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("deadline");
         });
-        assertEquals("Missing description or index.", exception.getMessage());
+        assertEquals("Command 'deadline' requires a parameter.", exception.getMessage());
     }
 
     @Test
@@ -147,7 +147,7 @@ class ParserTest {
         LeoException exception = assertThrows(LeoException.class, () -> {
             Parser.parse("event");
         });
-        assertEquals("Missing description or index.", exception.getMessage());
+        assertEquals("Command 'event' requires a parameter.", exception.getMessage());
     }
 
     // Test unknown commands
