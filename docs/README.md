@@ -1,9 +1,5 @@
 # Leo The Lizard User Guide
-
-
 ![Ui.png](Ui.png)
-
-
 Leo The Lizard is a chatbot that tracks your daily tasks. Simply add your tasks into the chat and Leo would organise them for you!
 
 
