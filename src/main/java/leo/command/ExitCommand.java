@@ -4,6 +4,7 @@ import leo.LeoException;
 import leo.Storage;
 import leo.TaskList;
 import leo.Ui;
+
 /** Command to exit the program */
 public class ExitCommand extends Command {
 

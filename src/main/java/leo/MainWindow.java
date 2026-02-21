@@ -1,5 +1,6 @@
 package leo;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -59,5 +60,9 @@ public class MainWindow extends AnchorPane {
                     DialogBox.getErrorDialog(e.getMessage(), leoImage));
         }
         userInput.clear();
+
+        if (leo.getExit()) {
+            Platform.exit();
+        }
     }
 }

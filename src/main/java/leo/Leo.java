@@ -2,6 +2,7 @@ package leo;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import leo.command.Command;
 
 
@@ -17,6 +18,7 @@ public class Leo {
     private TaskList tasks;
     private Ui ui;
     private String startupMessage = null;
+    private boolean isExit = false;
 
     /**
      * Constructs a new Leo instance with the specified file path for data storage.
@@ -45,7 +47,6 @@ public class Leo {
      * until an exit command is received.
      */
     public void run() {
-        boolean isExit = false;
         ui.showWelcome();
         while (!isExit) {
             try {
@@ -72,10 +73,15 @@ public class Leo {
 
     public String getResponse(String input) throws LeoException {
         Command command = Parser.parse(input);
+        isExit = command.isExit();
         return command.execute(tasks, ui, storage);
     }
 
     public String getStartupMessage() {
         return startupMessage;
+    }
+
+    public boolean getExit() {
+        return this.isExit;
     }
 }

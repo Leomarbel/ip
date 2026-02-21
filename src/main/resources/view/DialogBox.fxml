@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<fx:root alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="126.0" prefWidth="400.0" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="TOP_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="126.0" prefWidth="400.0" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
     <children>
       <StackPane id="bubble" fx:id="bubble" prefHeight="150.0" prefWidth="386.0" styleClass="dialog-bubble" stylesheets="@style.css">
          <children>
-              <ImageView fx:id="displayPicture" fitHeight="105.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT" />
+              <ImageView fx:id="displayPicture" fitHeight="51.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT" />
               <Label fx:id="dialog" minHeight="-Infinity" text="Label" wrapText="true" StackPane.alignment="CENTER_LEFT">
                <font>
                   <Font name="Tahoma" size="16.0" />
